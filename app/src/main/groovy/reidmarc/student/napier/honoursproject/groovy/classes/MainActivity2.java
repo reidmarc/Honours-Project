@@ -11,7 +11,11 @@ import reidmarc.student.napier.honoursproject.R;
 public class MainActivity2 extends AppCompatActivity
 {
     TextView nameTextView;
+    TextView dateTextView;
     String incomingName;
+    String date;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -22,6 +26,20 @@ public class MainActivity2 extends AppCompatActivity
         nameTextView = findViewById(R.id.nameTextView);
         incomingName = getIntent().getStringExtra("name");
         nameTextView.setText(incomingName);
+
+        Today theDate = new Today();
+
+        dateTextView = findViewById(R.id.dateTextView);
+        date = theDate.getAbbrToday().toString();
+
+        if (date != null) {
+            dateTextView.setText(date);
+        }
+        else
+        {
+            dateTextView.setText("NO DATE!!!");
+        }
+
 
         setupBackButton();
     }
