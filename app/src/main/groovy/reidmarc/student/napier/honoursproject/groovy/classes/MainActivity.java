@@ -5,14 +5,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
+import com.android.volley.*;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import reidmarc.student.napier.honoursproject.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
 {
-    EditText name;
-    String userName;
+    TextView nameTextView, dateTextView;
+    String incomingName, date;
+
+
+    RequestQueue requestQueue;
+    String insertURL = "http://10.0.2.1/honours_project/insertStudent"; // "http://192.168.0.12/honours_project/insertStudent.php";
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -20,35 +33,87 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setupNextButton();
+        nameTextView = findViewById(R.id.nameTextView);
+        incomingName = getIntent().getStringExtra("name");
+        nameTextView.setText(incomingName);
+
+        Today theDate = new Today();
+
+        dateTextView = findViewById(R.id.dateTextView);
+        date = theDate.getAbbrToday().toString();
+
+        if (date != null)
+        {
+            dateTextView.setText(date);
+        }
+        else
+        {
+            dateTextView.setText("NO DATE!!!");
+        }
+
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
+
+
+        setupAddButton(incomingName, date);
+        setupBackButton();
     }
 
-    private void setupNextButton()
+    private void setupBackButton()
     {
-        Button nextButton = findViewById(R.id.nextButton);
+        Button backButton = findViewById(R.id.backButton);
 
-        nextButton.setOnClickListener(new View.OnClickListener()
+        backButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                name = findViewById(R.id.nameInputTextbox);
-                userName = name.getText().toString();
-
-                // IF statement ensures a name is entered before navigating to the next page.
-                if (!userName.trim().isEmpty())
-                {
-                    Intent intent = new Intent(MainActivity.this, MainActivity2.class);
-                    intent.putExtra("name", userName);
-                    startActivity(intent);
-
-                    Toast.makeText(MainActivity.this, "Welcome " + userName + " !", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(MainActivity.this, "You must enter a name to continue....", Toast.LENGTH_LONG).show();
-                }
+                startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
             }
         });
     }
+
+    private void setupAddButton(String name, String date)
+    {
+        Button addButton = findViewById(R.id.addButton);
+
+        addButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                StringRequest request = new StringRequest(Request.Method.POST, insertURL, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s)
+                    {
+
+                    }
+                }, new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError)
+                    {
+
+                    }
+                })
+                {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError
+                    {
+                        Map<String,String> parameters = new HashMap<String, String>();
+                        parameters.put("name", nameTextView.getText().toString());
+                        parameters.put("date", dateTextView.getText().toString());
+
+
+                        return parameters;
+                    }
+                };
+
+                requestQueue.add(request);
+            }
+        });
+
+    }
+
+
 }
+
