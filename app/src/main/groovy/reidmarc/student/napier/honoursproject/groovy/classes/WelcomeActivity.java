@@ -1,6 +1,10 @@
 package reidmarc.student.napier.honoursproject.groovy.classes;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +23,8 @@ public class WelcomeActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        setupPermissions();
 
         setupNextButton();
     }
@@ -50,5 +56,18 @@ public class WelcomeActivity extends AppCompatActivity
                 }
             }
         });
+    }
+
+    private void setupPermissions()
+    {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
+        {
+            // No explanation needed; request the permission
+            ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+        else
+        {
+            // Permissions already granted.
+        }
     }
 }
