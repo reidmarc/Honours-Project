@@ -1,4 +1,4 @@
-package reidmarc.student.napier.honoursproject.groovy.classes;
+package reidmarc.student.napier.honoursproject;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -67,6 +67,11 @@ public class DatabaseHelper extends SQLiteOpenHelper
         Cursor res = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
 
         return res;
+    }
+
+    public String getDatabaseName()
+    {
+        return DATABASE_NAME;
     }
 
 }

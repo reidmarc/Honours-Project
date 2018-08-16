@@ -1,5 +1,7 @@
 package reidmarc.student.napier.honoursproject.groovy.classes
 
+// Today.groovy class written by Jon Kerridge
+
 import java.sql.Date
 
 class Today {

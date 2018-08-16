@@ -1,18 +1,17 @@
 package reidmarc.student.napier.honoursproject.groovy.classes;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import reidmarc.student.napier.honoursproject.CanvasView;
+import reidmarc.student.napier.honoursproject.DatabaseHelper;
 import reidmarc.student.napier.honoursproject.R;
+import reidmarc.student.napier.honoursproject.groovy.classes.Today;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,6 +25,7 @@ public class MainActivity extends AppCompatActivity
     String incomingName, currentDate;
     Button backButton, addButton, exportButton;
     DatabaseHelper myDb;
+    private CanvasView canvasView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity
 
         dateTextView = findViewById(R.id.dateTextView);
 
+        canvasView = findViewById(R.id.canvas);
+
         myDb = new DatabaseHelper(MainActivity.this);
 
         setTheDate();
@@ -51,6 +53,11 @@ public class MainActivity extends AppCompatActivity
         setupBackButton();
         exportDatabase();
 
+    }
+
+    public void clearCanvas(View v)
+    {
+        canvasView.clearCanvas();
     }
 
     private void setupBackButton()
@@ -80,9 +87,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
-
     private void exportDatabase()
     {
 
@@ -110,7 +114,7 @@ public class MainActivity extends AppCompatActivity
 
                 if (sd.canWrite())
                 {
-                    String currentDBPath = String.format("//data//%s//databases//%s", packageName, myDb.DATABASE_NAME);
+                    String currentDBPath = String.format("//data//%s//databases//%s", packageName, myDb.getDatabaseName());
                     String backupDBPath = "backup.db";
                     File currentDB = new File(data, currentDBPath);
                     File backupDB = new File(sd, backupDBPath);
@@ -148,14 +152,6 @@ public class MainActivity extends AppCompatActivity
         String state = Environment.getExternalStorageState();
 
         return Environment.MEDIA_MOUNTED.equals(state);
-
-        /*
-        if (Environment.MEDIA_MOUNTED.equals(state))
-        {
-            return true;
-        }
-        return false;
-        */
     }
 
     public void addData()

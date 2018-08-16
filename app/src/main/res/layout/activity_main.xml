@@ -7,6 +7,28 @@
         android:layout_height="match_parent"
         tools:context="reidmarc.student.napier.honoursproject.groovy.classes.MainActivity">
 
+
+    <reidmarc.student.napier.honoursproject.CanvasView
+
+            android:id="@+id/canvas"
+            android:background="#ffffff"
+            android:layout_width="1200px"
+            android:layout_height="430px"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="60dp"
+            app:layout_constraintHorizontal_bias="0.508"/>
+
+    <Button
+            android:text="CLEAR CANVAS"
+            android:layout_width="266dp"
+            android:layout_height="wrap_content"
+            android:onClick="clearCanvas"
+            android:id="@+id/button" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/backButton" android:layout_marginLeft="8dp"/>
+
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -18,14 +40,15 @@
             android:layout_marginLeft="8dp"/>
     <Button
             android:text="Back"
-            android:layout_width="0dp"
+            android:layout_width="266dp"
             android:layout_height="wrap_content"
             android:id="@+id/backButton"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.011"
+            android:layout_marginBottom="16dp" android:layout_marginLeft="8dp"/>
     <TextView
             android:text="DATE HERE"
             android:layout_width="wrap_content"
@@ -39,8 +62,9 @@
             android:text="Add User"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/addButton" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:layout_marginBottom="24dp" app:layout_constraintBottom_toTopOf="@+id/backButton"/>
+            android:id="@+id/addButton"
+            tools:layout_editor_absoluteX="865dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     <Button
             android:text="Export"
             android:layout_width="wrap_content"
