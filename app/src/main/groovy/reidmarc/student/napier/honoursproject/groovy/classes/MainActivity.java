@@ -11,7 +11,8 @@ import android.widget.Toast;
 import reidmarc.student.napier.honoursproject.CanvasView;
 import reidmarc.student.napier.honoursproject.DatabaseHelper;
 import reidmarc.student.napier.honoursproject.R;
-import reidmarc.student.napier.honoursproject.groovy.classes.Today;
+
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,10 +22,10 @@ import java.nio.channels.FileChannel;
 
 public class MainActivity extends AppCompatActivity
 {
-    TextView nameTextView, dateTextView;
-    String incomingName, currentDate;
-    Button backButton, addButton, exportButton;
-    DatabaseHelper myDb;
+    private TextView nameTextView, dateTextView;
+    private String incomingName, currentDate;
+    private Button backButton, addButton, exportButton;
+    private DatabaseHelper myDb;
     private CanvasView canvasView;
 
     @Override
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity
         myDb = new DatabaseHelper(MainActivity.this);
 
         setTheDate();
-
         addData();
         setupBackButton();
         exportDatabase();
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+
     private void setTheDate()
     {
         Today theDate = new Today();
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity
             dateTextView.setText(currentDate);
         }
     }
+
 
     private void exportDatabase()
     {

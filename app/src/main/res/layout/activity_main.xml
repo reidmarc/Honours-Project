@@ -5,6 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#444444"
         tools:context="reidmarc.student.napier.honoursproject.groovy.classes.MainActivity">
 
 
@@ -25,9 +26,10 @@
             android:layout_width="266dp"
             android:layout_height="wrap_content"
             android:onClick="clearCanvas"
-            android:id="@+id/button" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/backButton" android:layout_marginLeft="8dp"/>
+            android:id="@+id/clearButton"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@+id/backButton"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -43,12 +45,9 @@
             android:layout_width="266dp"
             android:layout_height="wrap_content"
             android:id="@+id/backButton"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.011"
-            android:layout_marginBottom="16dp" android:layout_marginLeft="8dp"/>
+            android:layout_marginLeft="28dp" android:layout_marginStart="28dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"/>
     <TextView
             android:text="DATE HERE"
             android:layout_width="wrap_content"
@@ -63,14 +62,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/addButton"
-            tools:layout_editor_absoluteX="865dp" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@+id/exportButton"
+            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
     <Button
             android:text="Export"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/exportButton" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/addButton" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
+            android:id="@+id/exportButton"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="28dp" android:layout_marginRight="28dp"/>
+    <Switch
+            android:text="Dominant Hand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/switch1" app:layout_constraintStart_toEndOf="@+id/clearButton"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="36dp"/>
 
 </android.support.constraint.ConstraintLayout>

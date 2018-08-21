@@ -15,8 +15,8 @@ import reidmarc.student.napier.honoursproject.R;
 
 public class WelcomeActivity extends AppCompatActivity
 {
-    EditText name;
-    String userName;
+    private EditText name;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
