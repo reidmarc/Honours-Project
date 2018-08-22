@@ -2,7 +2,6 @@ package reidmarc.student.napier.honoursproject;
 
 import android.content.Context;
 import android.graphics.*;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -60,10 +59,9 @@ public class CanvasView extends View
 
 
     // Related to timing
-    private long startingTimer;
-    private long timeDuration;
-    private double timeDurationSeconds;
-    private ArrayList<Double> timingList = new ArrayList<>();
+
+    //private ArrayList<Double> timingList = new ArrayList<>();
+    private Timing patternTiming;
 
 
     public CanvasView(Context context, @Nullable AttributeSet attrs)
@@ -74,6 +72,7 @@ public class CanvasView extends View
         getPatterns();
 
         mPath = new Path();
+
 
         userLine = new Paint();
         userLine.setAntiAlias(true);
@@ -91,6 +90,8 @@ public class CanvasView extends View
 
         targetCirclePaint = new Paint();
         targetCirclePaint.setColor(Color.RED);
+
+        patternTiming = new Timing();
 
 
     }
@@ -160,14 +161,12 @@ public class CanvasView extends View
             }
             else
             {
-                timeDuration = SystemClock.elapsedRealtimeNanos() - startingTimer;
-                timeDurationSeconds = ((double)timeDuration / 1000000000);
-                storeTiming(timeDurationSeconds);
+                patternTiming.addTimeToList(patternTiming.timeDurationSeconds());
 
 
                 patternCounter = patternCounter + 1;
 
-                String toastText = "You have completed pattern # " + patternCounter + " of " + patternList.size() + " in " + new DecimalFormat("#.##").format(timeDurationSeconds) + " seconds.";
+                String toastText = "You have completed pattern # " + patternCounter + " of " + patternList.size() + " in " + new DecimalFormat("#.##").format(patternTiming.timeDurationSeconds()) + " seconds.";
                 Toast.makeText(this.context, toastText, Toast.LENGTH_LONG).show();
 
                 clearCanvas();
@@ -189,8 +188,9 @@ public class CanvasView extends View
                 mY = y;
                 hasStarted = true;
 
+                patternTiming.startTiming();
 
-                startingTimer = SystemClock.elapsedRealtimeNanos();
+                //startingTimer = SystemClock.elapsedRealtimeNanos();
             }
             else
             {
@@ -227,6 +227,8 @@ public class CanvasView extends View
 
     public void clearCanvas()
     {
+        writeToConsole();
+
         if (patternCounter >= patternList.size())
         {
             patternCounter = 0;
@@ -236,7 +238,7 @@ public class CanvasView extends View
         targetCounter = 0;
         mX = 0;
         mY = 0;
-        writeToConsole();
+
         mPath.reset();
         invalidate();
     }
@@ -293,14 +295,18 @@ public class CanvasView extends View
             System.out.println("Y co-ordinate: " + yList.get(i) + " for pattern " + patternCounter);
         }
 
-        for (int i = 0; i < timingList.size(); i++ )
+
+
+        for (int i = 0; i < patternTiming.getTimingList().size(); i++ )
         {
-            System.out.println("Total time elapsed: " + timingList.get(i) + " for pattern " + patternCounter);
+            System.out.println("Total time elapsed: " + patternTiming.getTimingList().get(i) + " for pattern " + patternCounter);
         }
+         patternTiming.clearTimingList();
+
 
         xList.clear();
         yList.clear();
-        timingList.clear();
+
     }
 
 
@@ -308,12 +314,6 @@ public class CanvasView extends View
     {
         xList.add(x);
         yList.add(y);
-    }
-
-
-    private void storeTiming(double time)
-    {
-        timingList.add(time);
     }
     /////////////////////////////////////////////
 }
