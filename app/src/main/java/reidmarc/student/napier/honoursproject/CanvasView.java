@@ -2,14 +2,15 @@ package reidmarc.student.napier.honoursproject;
 
 import android.content.Context;
 import android.graphics.*;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class CanvasView extends View
@@ -56,6 +57,13 @@ public class CanvasView extends View
     private int[][] patternThree;
     private int targetCounter = 0;
     private int patternCounter = 0;
+
+
+    // Related to timing
+    private long startingTimer;
+    private long timeDuration;
+    private double timeDurationSeconds;
+    private ArrayList<Double> timingList = new ArrayList<>();
 
 
     public CanvasView(Context context, @Nullable AttributeSet attrs)
@@ -152,8 +160,16 @@ public class CanvasView extends View
             }
             else
             {
+                timeDuration = SystemClock.elapsedRealtimeNanos() - startingTimer;
+                timeDurationSeconds = ((double)timeDuration / 1000000000);
+                storeTiming(timeDurationSeconds);
+
+
                 patternCounter = patternCounter + 1;
-                Toast.makeText(this.context, "You have finished", Toast.LENGTH_SHORT).show();
+
+                String toastText = "You have completed pattern # " + patternCounter + " of " + patternList.size() + " in " + new DecimalFormat("#.##").format(timeDurationSeconds) + " seconds.";
+                Toast.makeText(this.context, toastText, Toast.LENGTH_LONG).show();
+
                 clearCanvas();
             }
         }
@@ -166,17 +182,20 @@ public class CanvasView extends View
 
         if (!hasStarted)
         {
-              if (sx < START_TOLERANCE && sy < START_TOLERANCE)
-              {
-                    mPath.moveTo(x, y);
-                    mX = x;
-                    mY = y;
-                    hasStarted = true;
-              }
-              else
-              {
-                   Toast.makeText(this.context, "You must start closer to the blue dot.", Toast.LENGTH_SHORT).show();
-              }
+            if (sx < START_TOLERANCE && sy < START_TOLERANCE)
+            {
+                mPath.moveTo(x, y);
+                mX = x;
+                mY = y;
+                hasStarted = true;
+
+
+                startingTimer = SystemClock.elapsedRealtimeNanos();
+            }
+            else
+            {
+                Toast.makeText(this.context, "You must start closer to the blue dot.", Toast.LENGTH_SHORT).show();
+            }
         }
         else
         {
@@ -270,12 +289,18 @@ public class CanvasView extends View
     {
         for (int i = 0; i < xList.size(); i++ )
         {
-            System.out.println("X co-ordinate: " + xList.get(i));
-            System.out.println("Y co-ordinate: " + yList.get(i));
+            System.out.println("X co-ordinate: " + xList.get(i) + " for pattern " + patternCounter);
+            System.out.println("Y co-ordinate: " + yList.get(i) + " for pattern " + patternCounter);
+        }
+
+        for (int i = 0; i < timingList.size(); i++ )
+        {
+            System.out.println("Total time elapsed: " + timingList.get(i) + " for pattern " + patternCounter);
         }
 
         xList.clear();
         yList.clear();
+        timingList.clear();
     }
 
 
@@ -283,6 +308,12 @@ public class CanvasView extends View
     {
         xList.add(x);
         yList.add(y);
+    }
+
+
+    private void storeTiming(double time)
+    {
+        timingList.add(time);
     }
     /////////////////////////////////////////////
 }
