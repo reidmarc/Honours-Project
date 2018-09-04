@@ -1,4 +1,4 @@
-package reidmarc.student.napier.honoursproject;
+package reidmarc.student.napier.honours_project.Classes;
 
 import android.content.ContentValues;
 import android.content.Context;

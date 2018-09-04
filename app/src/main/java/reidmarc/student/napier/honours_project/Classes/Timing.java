@@ -1,4 +1,4 @@
-package reidmarc.student.napier.honoursproject;
+package reidmarc.student.napier.honours_project.Classes;
 
 import android.os.SystemClock;
 
@@ -14,6 +14,8 @@ public class Timing
     {
         return timingList;
     }
+
+
 
     public void clearTimingList()
     {
@@ -44,5 +46,20 @@ public class Timing
         return ((double)timeDuration / 1000000);
 
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////TESTING//////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+
+    public void printTimingList(int pattern)
+    {
+        for (int i = 0; i < timingList.size(); i++)
+        {
+            System.out.println("Pattern: " + ( pattern + 1 ) + " - Target: " + ( i + 1 ) + " - Time: " + timingList.get( i ));
+        }
+        clearTimingList();
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
 
 }

@@ -1,4 +1,4 @@
-package reidmarc.student.napier.honoursproject.groovy.classes;
+package reidmarc.student.napier.honours_project.Activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import reidmarc.student.napier.honoursproject.R;
+import reidmarc.student.napier.honours_project.R;
 
 public class WelcomeActivity extends AppCompatActivity
 {

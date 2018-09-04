@@ -1,4 +1,4 @@
-package reidmarc.student.napier.honoursproject.groovy.classes;
+package reidmarc.student.napier.honours_project.Activities;
 
 import android.content.Intent;
 import android.os.Environment;
@@ -8,10 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import reidmarc.student.napier.honoursproject.CanvasView;
-import reidmarc.student.napier.honoursproject.DatabaseHelper;
-import reidmarc.student.napier.honoursproject.R;
-
+import reidmarc.student.napier.honours_project.*;
+import reidmarc.student.napier.honours_project.Classes.CanvasView;
+import reidmarc.student.napier.honours_project.Classes.DatabaseHelper;
+import reidmarc.student.napier.honours_project.Classes.Today;
 
 
 import java.io.File;
@@ -75,8 +75,8 @@ public class MainActivity extends AppCompatActivity
 
     private void setTheDate()
     {
-        Today theDate = new Today();
-        currentDate = theDate.getAbbrToday().toString();
+        Today today = new Today();
+        currentDate = today.getAbbrToday();
 
         if (currentDate == null)
         {

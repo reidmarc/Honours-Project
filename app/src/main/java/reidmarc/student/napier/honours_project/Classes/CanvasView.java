@@ -1,4 +1,4 @@
-package reidmarc.student.napier.honoursproject;
+package reidmarc.student.napier.honours_project.Classes;
 
 import android.content.Context;
 import android.graphics.*;
@@ -20,16 +20,16 @@ public class CanvasView extends View
     private Paint userLine;
     private float mX, mY;
     private static final float TARGET_TOLERANCE = 10;
-    private static final float START_TOLERANCE = 15;
-    private static final float TOLERANCE = 2;
+    private static final float START_TOLERANCE = 20;
+    private static final float TOLERANCE = 1;
     private Context context;
 
     // Draw the dividing line
     private Paint dividingLinePaint;
     private final int lineStartX = 0;
-    private final int lineStartY = 215;
+    private final int lineStartY = 275;
     private final int lineStopX = 1200;
-    private final int lineStopY = 215;
+    private final int lineStopY = 275;
 
     // Draw the starting circle
     private Paint startCirclePaint;
@@ -62,6 +62,10 @@ public class CanvasView extends View
 
     //private ArrayList<Double> timingList = new ArrayList<>();
     private Timing patternTiming;
+    private Timing targetTiming;
+    private Timing pauseTiming;
+
+    private boolean targetTimingStarted;
 
 
     public CanvasView(Context context, @Nullable AttributeSet attrs)
@@ -83,7 +87,8 @@ public class CanvasView extends View
 
         dividingLinePaint = new Paint();
         dividingLinePaint.setColor(Color.DKGRAY);
-        dividingLinePaint.setStrokeWidth(30f);
+        // dividingLinePaint.setStrokeWidth(30f);
+        dividingLinePaint.setStrokeWidth(150f);
 
         startCirclePaint = new Paint();
         startCirclePaint.setColor(Color.BLUE);
@@ -92,6 +97,8 @@ public class CanvasView extends View
         targetCirclePaint.setColor(Color.RED);
 
         patternTiming = new Timing();
+        targetTiming = new Timing();
+        pauseTiming = new Timing();
 
 
     }
@@ -132,7 +139,8 @@ public class CanvasView extends View
 
         canvas.drawPath(mPath, userLine);
 
-        canvas.drawCircle(startingPointX, (startingPointY + 230), startingCircleRadius, startCirclePaint);
+        // canvas.drawCircle(startingPointX, (startingPointY + 230), startingCircleRadius, startCirclePaint);
+        canvas.drawCircle(startingPointX, (startingPointY + 350), startingCircleRadius, startCirclePaint);
 
         drawTargetCircles(canvas);
 
@@ -157,11 +165,19 @@ public class CanvasView extends View
         {
             if (targetCounter < patternList.get(patternCounter).length - 1)
             {
+
+                targetTiming.addTimeToList(targetTiming.timeDurationSeconds());
+                targetTiming.startTiming();
+
                 targetCounter = targetCounter + 1;
             }
             else
             {
                 patternTiming.addTimeToList(patternTiming.timeDurationSeconds());
+
+                // TESTING
+                targetTiming.printTimingList(patternCounter);
+                //
 
 
                 patternCounter = patternCounter + 1;
@@ -189,8 +205,9 @@ public class CanvasView extends View
                 hasStarted = true;
 
                 patternTiming.startTiming();
+                targetTiming.startTiming();
 
-                //startingTimer = SystemClock.elapsedRealtimeNanos();
+
             }
             else
             {
@@ -216,7 +233,6 @@ public class CanvasView extends View
 
             if (dx >= TOLERANCE || dy >= TOLERANCE)
             {
-
                 storeCoordinates(x, y);
                 mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
                 mX = x;
@@ -235,7 +251,7 @@ public class CanvasView extends View
         }
 
         hasStarted = false;
-        targetCounter = 0;
+        //targetCounter = 0;
         mX = 0;
         mY = 0;
 
@@ -252,7 +268,7 @@ public class CanvasView extends View
     public boolean onTouchEvent(MotionEvent event)
     {
         float x = event.getX();
-        float y = event.getY() - 230;
+        float y = event.getY() - 350;
 
         // Limits the drawable area
         if ( x > 1200 || y > 200 || x < 0 || y < 0)
@@ -284,8 +300,9 @@ public class CanvasView extends View
 
 
 
-
-    //////////////////TESTING/////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////TESTING//////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     private void writeToConsole()
     {
@@ -301,7 +318,7 @@ public class CanvasView extends View
         {
             System.out.println("Total time elapsed: " + patternTiming.getTimingList().get(i) + " for pattern " + patternCounter);
         }
-         patternTiming.clearTimingList();
+        patternTiming.clearTimingList();
 
 
         xList.clear();
@@ -315,6 +332,6 @@ public class CanvasView extends View
         xList.add(x);
         yList.add(y);
     }
-    /////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 }
 

@@ -6,20 +6,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#444444"
-        tools:context="reidmarc.student.napier.honoursproject.groovy.classes.MainActivity">
+        tools:context=".Activities.MainActivity">
 
 
-    <reidmarc.student.napier.honoursproject.CanvasView
+    <reidmarc.student.napier.honours_project.Classes.CanvasView
 
             android:id="@+id/canvas"
             android:background="#ffffff"
             android:layout_width="1200px"
-            android:layout_height="430px"
+            android:layout_height="550px"
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="60dp"
-            app:layout_constraintHorizontal_bias="0.508"/>
+            app:layout_constraintHorizontal_bias="0.508" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="40dp"/>
 
     <Button
             android:text="CLEAR CANVAS"
