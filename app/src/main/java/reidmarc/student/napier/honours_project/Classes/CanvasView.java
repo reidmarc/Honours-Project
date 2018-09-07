@@ -251,7 +251,7 @@ public class CanvasView extends View
         }
 
         hasStarted = false;
-        //targetCounter = 0;
+        targetCounter = 0;
         mX = 0;
         mY = 0;
 
