@@ -33,9 +33,16 @@ public class CanvasView extends View
 
     // Draw the starting circle
     private Paint startCirclePaint;
-    private final int startingPointX = 0;
+    private final int startingPointX = 11;
     private final int startingPointY = 100;
     private final int startingCircleRadius = 10;
+
+    // Draw the ending circle
+    private Paint endCirclePaint;
+    private final int endPointX = 1189;
+    private final int endPointY = 100;
+    private final int endCircleRadius = 10;
+    private boolean isTheLastTarget = false;
 
     // Draw the target circles
     private Paint targetCirclePaint;
@@ -51,9 +58,10 @@ public class CanvasView extends View
 
     // Related to storing and retrieving patterns
     private ArrayList<int[][]> patternList = new ArrayList<>();
-    private int[][] patternOne;
-    private int[][] patternTwo;
-    private int[][] patternThree;
+
+
+
+
     private int targetCounter = 0;
     private int patternCounter = 0;
 
@@ -87,11 +95,13 @@ public class CanvasView extends View
 
         dividingLinePaint = new Paint();
         dividingLinePaint.setColor(Color.DKGRAY);
-        // dividingLinePaint.setStrokeWidth(30f);
         dividingLinePaint.setStrokeWidth(150f);
 
         startCirclePaint = new Paint();
         startCirclePaint.setColor(Color.BLUE);
+
+        endCirclePaint = new Paint();
+        endCirclePaint.setColor(Color.BLUE);
 
         targetCirclePaint = new Paint();
         targetCirclePaint.setColor(Color.RED);
@@ -106,18 +116,65 @@ public class CanvasView extends View
 
     private void getPatterns()
     {
-        Pattern firstPattern = new Pattern(1, 50, 55, 250, 190, 400, 10, 550, 190, 700, 10, 850, 190, 1000, 10, 1200, 100);
-        Pattern secondPattern = new Pattern(2,50, 155, 90, 20, 160, 100, 190, 190, 250, 170, 350, 25, 500, 175, 1200, 5 );
-        Pattern thirdPattern = new Pattern(3,100, 100, 250, 100, 400, 100, 550, 100, 700, 100, 850, 100, 1000, 100, 1200, 100 );
+        /*
+        // --------------------- PRACTICE PATTERNS ---------------------
+        int[][] patternOne;
+        int[][] patternTwo;
 
+        Pattern pattern1 = new Pattern(1, 75, 10, 225, 190, 375, 50, 525, 150, 675, 10, 825, 190, 975, 75, 1125, 125);
+        Pattern pattern2 = new Pattern(2,75, 190, 225, 10, 375, 150, 525, 50, 675, 190, 825, 10, 975, 125, 1125, 75 );
 
-        patternOne = firstPattern.getArrayOfCoords();
-        patternTwo = secondPattern.getArrayOfCoords();
-        patternThree = thirdPattern.getArrayOfCoords();
+        patternOne = pattern1.getArrayOfCoords();
+        patternTwo = pattern2.getArrayOfCoords();
 
         patternList.add(patternOne);
         patternList.add(patternTwo);
+
+
+
+        // --------------------- 9 DOT PATTERNS ---------------------
+        int[][] patternThree;
+        int[][] patternFour;
+
+        Pattern pattern3 = new Pattern(3,75, 100, 225, 100, 375, 100, 525, 100, 675, 100, 825, 100, 975, 100, 1125, 100 );
+        Pattern pattern4 = new Pattern(4,75, 100, 225, 100, 375, 100, 525, 100, 675, 100, 825, 100, 975, 100, 1125, 100 );
+
+        patternThree = pattern3.getArrayOfCoords();
+        patternFour = pattern4.getArrayOfCoords();
+
         patternList.add(patternThree);
+        patternList.add(patternFour);
+
+
+
+        // --------------------- 15 DOT PATTERNS ---------------------
+        int[][] patternFive;
+        int[][] patternSix;
+
+        Pattern pattern5 = new Pattern(5,80, 50, 160, 150, 240, 100, 320, 100, 400, 100, 480, 100, 560, 100, 640, 100 ,720, 100, 800, 100, 880, 100, 960, 100, 1040, 100, 1125, 100 );
+        Pattern pattern6 = new Pattern(6,80, 150, 160, 50, 240, 100, 320, 100, 400, 100, 480, 100, 560, 100, 640, 100, 720, 100, 800, 100, 880, 100, 960, 100, 1040, 100, 1125, 100 );
+
+        patternFive = pattern5.getArrayOfCoords();
+        patternSix = pattern6.getArrayOfCoords();
+
+        patternList.add(patternFive);
+        patternList.add(patternSix);
+        */
+
+
+
+        // --------------------- 21 DOT PATTERNS ---------------------
+        int[][] patternSeven;
+        int[][] patternEight;
+
+        Pattern pattern7 = new Pattern(7,80, 50, 130, 150, 180, 100, 230, 100, 280, 100, 330, 100, 380, 100, 430, 100 ,480, 100, 530, 100, 580, 100, 630, 100, 680, 100, 730, 100, 780, 100, 830, 100, 880, 100, 930, 100, 980, 100, 1030, 100 );
+        Pattern pattern8 = new Pattern(8,80, 150, 130, 50, 180, 100, 230, 100, 280, 100, 330, 100, 380, 100, 430, 100, 480, 100, 530, 100, 580, 100, 630, 100, 680, 100, 730, 100, 780, 100, 830, 100, 880, 100, 930, 100, 980, 100, 1030, 100 );
+
+        patternSeven = pattern7.getArrayOfCoords();
+        patternEight = pattern8.getArrayOfCoords();
+
+        patternList.add(patternSeven);
+        patternList.add(patternEight);
 
     }
 
@@ -139,17 +196,22 @@ public class CanvasView extends View
 
         canvas.drawPath(mPath, userLine);
 
-        // canvas.drawCircle(startingPointX, (startingPointY + 230), startingCircleRadius, startCirclePaint);
         canvas.drawCircle(startingPointX, (startingPointY + 350), startingCircleRadius, startCirclePaint);
 
         drawTargetCircles(canvas);
-
-
     }
 
     private void drawTargetCircles(Canvas canvas)
     {
-        canvas.drawCircle(patternList.get(patternCounter)[targetCounter][0], patternList.get(patternCounter)[targetCounter][1], targetCircleRadius, targetCirclePaint);
+        if (isTheLastTarget)
+        {
+            canvas.drawCircle(endPointX, endPointY, endCircleRadius, endCirclePaint);
+        }
+        else
+        {
+            canvas.drawCircle(patternList.get(patternCounter)[targetCounter][0], patternList.get(patternCounter)[targetCounter][1], targetCircleRadius, targetCirclePaint);
+        }
+
     }
 
 
@@ -163,20 +225,26 @@ public class CanvasView extends View
 
         if (tx < TARGET_TOLERANCE && ty < TARGET_TOLERANCE)
         {
+            targetTiming.addTimeToList(targetTiming.timeDurationSeconds());
+
             if (targetCounter < patternList.get(patternCounter).length - 1)
             {
-
-                targetTiming.addTimeToList(targetTiming.timeDurationSeconds());
                 targetTiming.startTiming();
 
                 targetCounter = targetCounter + 1;
+
+                if (targetCounter == patternList.get(patternCounter).length - 1)
+                {
+                    isTheLastTarget = true;
+                }
+
             }
             else
             {
                 patternTiming.addTimeToList(patternTiming.timeDurationSeconds());
 
                 // TESTING
-                targetTiming.printTimingList(patternCounter);
+                // targetTiming.printTimingList(patternCounter);
                 //
 
 
@@ -187,6 +255,7 @@ public class CanvasView extends View
 
                 clearCanvas();
             }
+
         }
     }
 
@@ -250,6 +319,7 @@ public class CanvasView extends View
             patternCounter = 0;
         }
 
+        isTheLastTarget = false;
         hasStarted = false;
         targetCounter = 0;
         mX = 0;
@@ -306,25 +376,49 @@ public class CanvasView extends View
 
     private void writeToConsole()
     {
+        /*
         for (int i = 0; i < xList.size(); i++ )
         {
+            System.out.println("Co-ordinate: " + ( i + 1 ) + "");
             System.out.println("X co-ordinate: " + xList.get(i) + " for pattern " + patternCounter);
             System.out.println("Y co-ordinate: " + yList.get(i) + " for pattern " + patternCounter);
         }
+        */
 
+        //targetTiming.printTimingList(patternCounter);
 
+        //patternTiming.printTimingList(patternCounter);
 
+        compareTimings(targetTiming.printTimingList(patternCounter), patternTiming.printTimingList(patternCounter));
+
+        /*
         for (int i = 0; i < patternTiming.getTimingList().size(); i++ )
         {
             System.out.println("Total time elapsed: " + patternTiming.getTimingList().get(i) + " for pattern " + patternCounter);
         }
         patternTiming.clearTimingList();
+        */
 
 
         xList.clear();
         yList.clear();
 
     }
+
+    private void compareTimings(double totalTargetTime, double totalPattenTime)
+    {
+        double difference = totalTargetTime - totalPattenTime;
+
+        if (difference < 0.01 && difference > -0.01)
+        {
+            System.out.println("The timings have passed, with a difference of: " + difference + " seconds.");
+        }
+        else
+        {
+            System.out.println("The timings have failed, with a difference of: " + difference + " seconds.");
+        }
+    }
+
 
 
     private void storeCoordinates(float x, float y)

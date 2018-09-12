@@ -51,13 +51,39 @@ public class Timing
     //////////////////////////////////TESTING//////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 
-    public void printTimingList(int pattern)
+    public double printTimingList(int pattern)
     {
+        double totalTargetTime = 0;
+
         for (int i = 0; i < timingList.size(); i++)
         {
-            System.out.println("Pattern: " + ( pattern + 1 ) + " - Target: " + ( i + 1 ) + " - Time: " + timingList.get( i ));
+            if (timingList.size() > 1)
+            {
+                System.out.println("Pattern: " + pattern + " - Target: " + (i + 1) + " - Time: " + timingList.get(i));
+
+                totalTargetTime += timingList.get(i);
+            }
+            else
+            {
+                System.out.println("Pattern: " + pattern + " - Total Pattern Time: " + timingList.get(i));
+            }
         }
-        clearTimingList();
+
+        if (totalTargetTime > 0)
+        {
+            clearTimingList();
+
+            System.out.println("Pattern: " + pattern + " - Total Target Time: " + totalTargetTime);
+            return totalTargetTime;
+        }
+        else
+        {
+            double totalPatternTime = timingList.get(0);
+
+            clearTimingList();
+
+            return totalPatternTime;
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
