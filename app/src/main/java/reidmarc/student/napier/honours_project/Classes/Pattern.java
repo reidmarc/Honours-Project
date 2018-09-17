@@ -69,8 +69,6 @@ public class Pattern
     private int x21;
     private int y21;
 
-
-
     private int[][] xy;
 
 

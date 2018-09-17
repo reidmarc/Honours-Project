@@ -116,7 +116,7 @@ public class CanvasView extends View
 
     private void getPatterns()
     {
-        /*
+
         // --------------------- PRACTICE PATTERNS ---------------------
         int[][] patternOne;
         int[][] patternTwo;
@@ -136,8 +136,8 @@ public class CanvasView extends View
         int[][] patternThree;
         int[][] patternFour;
 
-        Pattern pattern3 = new Pattern(3,75, 100, 225, 100, 375, 100, 525, 100, 675, 100, 825, 100, 975, 100, 1125, 100 );
-        Pattern pattern4 = new Pattern(4,75, 100, 225, 100, 375, 100, 525, 100, 675, 100, 825, 100, 975, 100, 1125, 100 );
+        Pattern pattern3 = new Pattern(3,175, 10, 225, 125, 375, 190, 425, 130, 675, 100, 925, 170, 975, 10, 1125, 140 );
+        Pattern pattern4 = new Pattern(4,175, 190, 225, 75, 375, 10, 425, 70, 675, 100, 925, 30, 975, 190, 1125, 60 );
 
         patternThree = pattern3.getArrayOfCoords();
         patternFour = pattern4.getArrayOfCoords();
@@ -151,15 +151,15 @@ public class CanvasView extends View
         int[][] patternFive;
         int[][] patternSix;
 
-        Pattern pattern5 = new Pattern(5,80, 50, 160, 150, 240, 100, 320, 100, 400, 100, 480, 100, 560, 100, 640, 100 ,720, 100, 800, 100, 880, 100, 960, 100, 1040, 100, 1125, 100 );
-        Pattern pattern6 = new Pattern(6,80, 150, 160, 50, 240, 100, 320, 100, 400, 100, 480, 100, 560, 100, 640, 100, 720, 100, 800, 100, 880, 100, 960, 100, 1040, 100, 1125, 100 );
+        Pattern pattern5 = new Pattern(5,125, 190, 160, 160, 240, 130, 320, 100, 400, 190, 480, 10, 560, 100, 640, 75 ,750, 125, 800, 125, 830, 190, 960, 100, 1090, 190, 1165, 80 );
+        Pattern pattern6 = new Pattern(6,125, 10, 160, 40, 240, 70, 320, 100, 400, 10, 480, 190, 560, 100, 640, 125, 750, 75, 800, 75, 830, 10, 960, 100, 1090, 10, 1165, 120 );
 
         patternFive = pattern5.getArrayOfCoords();
         patternSix = pattern6.getArrayOfCoords();
 
         patternList.add(patternFive);
         patternList.add(patternSix);
-        */
+
 
 
 
@@ -310,7 +310,7 @@ public class CanvasView extends View
         }
     }
 
-    public void clearCanvas()
+    private void clearCanvas()
     {
         writeToConsole();
 
@@ -385,20 +385,7 @@ public class CanvasView extends View
         }
         */
 
-        //targetTiming.printTimingList(patternCounter);
-
-        //patternTiming.printTimingList(patternCounter);
-
         compareTimings(targetTiming.printTimingList(patternCounter), patternTiming.printTimingList(patternCounter));
-
-        /*
-        for (int i = 0; i < patternTiming.getTimingList().size(); i++ )
-        {
-            System.out.println("Total time elapsed: " + patternTiming.getTimingList().get(i) + " for pattern " + patternCounter);
-        }
-        patternTiming.clearTimingList();
-        */
-
 
         xList.clear();
         yList.clear();

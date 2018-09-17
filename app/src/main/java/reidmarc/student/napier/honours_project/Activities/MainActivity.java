@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity
 {
     private TextView nameTextView, dateTextView;
     private String incomingName, currentDate;
-    private Button backButton, addButton, exportButton;
+    private Button backButton, addButton, exportButton, clearButton;
     private DatabaseHelper myDb;
     private CanvasView canvasView;
 
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity
         addButton = findViewById(R.id.addButton);
         exportButton = findViewById(R.id.exportButton);
 
+
         dateTextView = findViewById(R.id.dateTextView);
 
         canvasView = findViewById(R.id.canvas);
@@ -55,10 +56,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void clearCanvas(View v)
-    {
-        canvasView.clearCanvas();
-    }
+
 
     private void setupBackButton()
     {
