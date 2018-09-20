@@ -45,6 +45,8 @@ public class CanvasView extends View
     private final int endCircleRadius = 10;
     private boolean isTheLastTarget = false;
 
+    private boolean isTheLastTargetOfTheLastPattern = false;
+
     // Draw the target circles
     private Paint targetCirclePaint;
     private int targetCircleRadius = 5;
@@ -212,15 +214,17 @@ public class CanvasView extends View
 
     private void drawTargetCircles(Canvas canvas)
     {
-        if (isTheLastTarget)
+        if (!isTheLastTargetOfTheLastPattern)
         {
-            canvas.drawCircle(endPointX, endPointY, endCircleRadius, endCirclePaint);
+            if (isTheLastTarget)
+            {
+                canvas.drawCircle(endPointX, endPointY, endCircleRadius, endCirclePaint);
+            }
+            else
+            {
+                canvas.drawCircle(patternList.get(patternCounter)[targetCounter][0], patternList.get(patternCounter)[targetCounter][1], targetCircleRadius, targetCirclePaint);
+            }
         }
-        else
-        {
-            canvas.drawCircle(patternList.get(patternCounter)[targetCounter][0], patternList.get(patternCounter)[targetCounter][1], targetCircleRadius, targetCirclePaint);
-        }
-
     }
 
 
@@ -232,39 +236,40 @@ public class CanvasView extends View
         float tx = Math.abs(x - patternList.get(patternCounter)[targetCounter][0]);
         float ty = Math.abs(y - patternList.get(patternCounter)[targetCounter][1]);
 
-        if (tx < TARGET_TOLERANCE && ty < TARGET_TOLERANCE)
+        if (hasStarted)
         {
-            targetTiming.addTimeToList(targetTiming.timeDurationSeconds());
-
-            if (targetCounter < patternList.get(patternCounter).length - 1)
+            if (tx < TARGET_TOLERANCE && ty < TARGET_TOLERANCE)
             {
-                targetTiming.startTiming();
+                targetTiming.addTimeToList(targetTiming.timeDurationSeconds());
 
-                targetCounter = targetCounter + 1;
-
-                if (targetCounter == patternList.get(patternCounter).length - 1)
+                if (targetCounter < patternList.get(patternCounter).length - 1)
                 {
-                    isTheLastTarget = true;
+                    targetTiming.startTiming();
+
+                    targetCounter = targetCounter + 1;
+
+                    if (targetCounter == patternList.get(patternCounter).length - 1)
+                    {
+                        isTheLastTarget = true;
+                    }
                 }
+                else
+                {
+                    patternTiming.addTimeToList(patternTiming.timeDurationSeconds());
 
+                    // TESTING
+                    // targetTiming.printTimingList(patternCounter);
+                    //
+
+
+                    patternCounter = patternCounter + 1;
+
+                    String toastText = "You have completed pattern # " + patternCounter + " of " + patternList.size() + " in " + new DecimalFormat("#.##").format(patternTiming.timeDurationSeconds()) + " seconds.";
+                    Toast.makeText(this.context, toastText, Toast.LENGTH_LONG).show();
+
+                    clearCanvas();
+                }
             }
-            else
-            {
-                patternTiming.addTimeToList(patternTiming.timeDurationSeconds());
-
-                // TESTING
-                // targetTiming.printTimingList(patternCounter);
-                //
-
-
-                patternCounter = patternCounter + 1;
-
-                String toastText = "You have completed pattern # " + patternCounter + " of " + patternList.size() + " in " + new DecimalFormat("#.##").format(patternTiming.timeDurationSeconds()) + " seconds.";
-                Toast.makeText(this.context, toastText, Toast.LENGTH_LONG).show();
-
-                clearCanvas();
-            }
-
         }
     }
 
@@ -328,11 +333,8 @@ public class CanvasView extends View
         // Compares times
         compareTimings(targetTiming.printTimingList(patternCounter), patternTiming.printTimingList(patternCounter));
 
-
-
         // Add list of x and y coordinates to the coordinates list
         coordsList.add(new ArrayList<>(xyList));
-
 
         // Clears the list of x and y coordinates before new pattern
         xyList.clear();
@@ -341,8 +343,8 @@ public class CanvasView extends View
 
         if (patternCounter >= patternList.size())
         {
-            // dataStructureCheck();
-            patternCounter = 0;
+            //patternCounter = 0;
+            isTheLastTargetOfTheLastPattern = true;
         }
 
         isTheLastTarget = false;
@@ -373,9 +375,14 @@ public class CanvasView extends View
         {
             return false;
         }
+        else if (isTheLastTargetOfTheLastPattern)
+        {
+            return false;
+        }
         else
         {
-            switch (event.getAction()) {
+            switch (event.getAction())
+            {
                 case MotionEvent.ACTION_DOWN:
                     startTouch(x, y);
                     invalidate();
@@ -391,7 +398,6 @@ public class CanvasView extends View
                     invalidate();
                     break;
             }
-
             return true;
         }
     }
@@ -406,11 +412,6 @@ public class CanvasView extends View
     ///////////////////////////////////////////////////////////////////////////
     private void storeCoordinates(float x, float y)
     {
-        /*
-        xList.add(x);
-        yList.add(y);
-        */
-
         xyList.add(x);
         xyList.add(y);
     }
@@ -418,14 +419,6 @@ public class CanvasView extends View
     private void writeToConsole()
     {
         /*
-        for (int i = 0; i < xList.size(); i++ )
-        {
-            System.out.println("Co-ordinate: " + ( i + 1 ) + "");
-            System.out.println("X co-ordinate: " + xList.get(i) + " for pattern " + patternCounter);
-            System.out.println("Y co-ordinate: " + yList.get(i) + " for pattern " + patternCounter);
-        }
-
-
         for (int i = 0; i < xyList.size(); i = i + 2 )
         {
             System.out.println("Co-ordinate: " + ( i + 1 ) + "");

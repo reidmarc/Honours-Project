@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
+import android.renderscript.Sampler;
 
 public class DatabaseHelper extends SQLiteOpenHelper
 {
@@ -41,6 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
     public boolean insertData(int pattern, float x, float y)
     {
+        /*
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -48,6 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         contentValues.put(COL_3, x);
         contentValues.put(COL_4, y);
 
+        //String sql = "INSERT INTO " + TABLE_NAME + " (" + COL_2 + ", " + COL_3 + ", " + COL_4 + ") VALUES (?, ?, ?)";
 
         // If the insert fails a value of -1 is returned.
         long result = db.insert(TABLE_NAME, null, contentValues);
@@ -60,6 +64,31 @@ public class DatabaseHelper extends SQLiteOpenHelper
         {
             return true;
         }
+        */
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COL_2, pattern);
+        contentValues.put(COL_3, x);
+        contentValues.put(COL_4, y);
+
+        //String sql = "INSERT INTO " + TABLE_NAME + " (" + COL_2 + ", " + COL_3 + ", " + COL_4 + ") VALUES (?, ?, ?)";
+
+        // If the insert fails a value of -1 is returned.
+        long result = db.insert(TABLE_NAME, null, contentValues);
+
+        if (result == -1)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
+
+
     }
 
     /*

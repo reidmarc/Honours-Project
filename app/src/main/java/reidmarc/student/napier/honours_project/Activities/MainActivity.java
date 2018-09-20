@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity
 
                 ArrayList<ArrayList<Float>> coordsListOfLists = canvasView.getCoordsList();
 
+
                 dbInsertTiming.startTiming();
 
                 for (int i = 0; i < coordsListOfLists.size(); i++)
@@ -202,21 +203,7 @@ public class MainActivity extends AppCompatActivity
                 {
                     Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_LONG).show();
                 }
-                // WHAT ARE YOU GOING TO DO WITH THIS LIST OF LISTS?
 
-                /*
-
-                boolean isInserted = myDb.insertData();
-
-                if (isInserted)
-                {
-                    Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    Toast.makeText(MainActivity.this, "Data NOT Inserted", Toast.LENGTH_LONG).show();
-                }
-                */
 
             }
         });
