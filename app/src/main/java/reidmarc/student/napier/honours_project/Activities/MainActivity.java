@@ -11,6 +11,7 @@ import android.widget.Toast;
 import reidmarc.student.napier.honours_project.*;
 import reidmarc.student.napier.honours_project.Classes.CanvasView;
 import reidmarc.student.napier.honours_project.Classes.DatabaseHelper;
+import reidmarc.student.napier.honours_project.Classes.Timing;
 import reidmarc.student.napier.honours_project.Classes.Today;
 
 
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity
     private Button backButton, addButton, exportButton, clearButton;
     private DatabaseHelper myDb;
     private CanvasView canvasView;
+    private Timing dbInsertTiming;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -50,9 +53,12 @@ public class MainActivity extends AppCompatActivity
         myDb = new DatabaseHelper(MainActivity.this);
 
         setTheDate();
-        addData();
         setupBackButton();
         exportDatabase();
+        addData();
+
+
+        dbInsertTiming = new Timing();
 
     }
 
@@ -154,6 +160,7 @@ public class MainActivity extends AppCompatActivity
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
+    // Adds coordinates to Database
     public void addData()
     {
         addButton.setOnClickListener(new View.OnClickListener()
@@ -161,11 +168,45 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                boolean isInserted = myDb.insertData
-                        (
-                                incomingName,
-                                currentDate
-                        );
+
+                boolean isInserted = false;
+                int counter = 0;
+
+                ArrayList<ArrayList<Float>> coordsListOfLists = canvasView.getCoordsList();
+
+                dbInsertTiming.startTiming();
+
+                for (int i = 0; i < coordsListOfLists.size(); i++)
+                {
+                    for (int j = 0; j < coordsListOfLists.get(i).size(); j = j + 2)
+                    {
+                        int pattern = i;
+                        float x = coordsListOfLists.get(i).get(j);
+                        float y = coordsListOfLists.get(i).get(j + 1);
+
+                        isInserted = myDb.insertData(pattern, x, y );
+
+                        if (!isInserted && counter < 1)
+                        {
+                            Toast.makeText(MainActivity.this, "Data NOT Inserted", Toast.LENGTH_LONG).show();
+                            counter = counter + 1;
+                        }
+                    }
+                }
+
+                System.out.println("TIME TAKEN TO INSERT DATA: " + dbInsertTiming.timeDurationSeconds());
+
+
+
+                if (counter == 0)
+                {
+                    Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_LONG).show();
+                }
+                // WHAT ARE YOU GOING TO DO WITH THIS LIST OF LISTS?
+
+                /*
+
+                boolean isInserted = myDb.insertData();
 
                 if (isInserted)
                 {
@@ -175,63 +216,15 @@ public class MainActivity extends AppCompatActivity
                 {
                     Toast.makeText(MainActivity.this, "Data NOT Inserted", Toast.LENGTH_LONG).show();
                 }
-            }
-        });
-    }
-
-    /*
-    public void ViewAll()
-    {
-        btnViewAll.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Cursor res = myDb.getAllData();
-
-                // If there is no data to display the count will == 0
-                if (res.getCount() == 0)
-                {
-                    showMessage("Error", "No Data Found.....");
-                    return;
-                }
-
-                StringBuffer buffer = new StringBuffer();
-
-                while (res.moveToNext())
-                {
-                    buffer.append("ID :"+res.getString(0)+"\n");
-                    buffer.append("Name :"+res.getString(1)+"\n");
-                    buffer.append("Surname :"+res.getString(2)+"\n");
-                    buffer.append("Marks :"+res.getString(3)+"\n\n");
-
-
-                    // extracting the data
-                    textName.setText(res.getString(1));
-                    textSurname.setText(res.getString(2));
-                    textMarks.setText(res.getString(3));
-
-
-                }
-
-                showMessage("Data", buffer.toString());
+                */
 
             }
         });
     }
 
 
-    public void showMessage(String title, String message)
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setCancelable(true);
-        builder.setTitle(title);
-        builder.setMessage(message);
 
-        builder.show();
-    }
-    */
 
 }
 

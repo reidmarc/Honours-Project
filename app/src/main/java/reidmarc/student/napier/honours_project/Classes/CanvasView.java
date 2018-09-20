@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+import reidmarc.student.napier.honours_project.Activities.MainActivity;
 
 
 import java.text.DecimalFormat;
@@ -49,8 +50,13 @@ public class CanvasView extends View
     private int targetCircleRadius = 5;
 
     // Arraylist to store co-ords
-    private ArrayList<Float> xList = new ArrayList<>();
-    private ArrayList<Float> yList = new ArrayList<>();
+    //private ArrayList<Float> xList = new ArrayList<>();
+    //private ArrayList<Float> yList = new ArrayList<>();
+
+    private ArrayList<Float> xyList = new ArrayList<>();
+
+    private ArrayList<ArrayList<Float>> coordsList = new ArrayList<>();
+
 
     private boolean hasStarted = false;
     private boolean hasFinished = false;
@@ -67,13 +73,15 @@ public class CanvasView extends View
 
 
     // Related to timing
-
-    //private ArrayList<Double> timingList = new ArrayList<>();
     private Timing patternTiming;
     private Timing targetTiming;
     private Timing pauseTiming;
 
     private boolean targetTimingStarted;
+
+
+    // Database related
+
 
 
     public CanvasView(Context context, @Nullable AttributeSet attrs)
@@ -109,8 +117,6 @@ public class CanvasView extends View
         patternTiming = new Timing();
         targetTiming = new Timing();
         pauseTiming = new Timing();
-
-
     }
 
 
@@ -129,6 +135,8 @@ public class CanvasView extends View
         patternList.add(patternOne);
         patternList.add(patternTwo);
 
+
+        /*
 
 
         // --------------------- 9 DOT PATTERNS ---------------------
@@ -173,6 +181,9 @@ public class CanvasView extends View
 
         patternList.add(patternSeven);
         patternList.add(patternEight);
+
+
+        */
 
     }
 
@@ -257,6 +268,7 @@ public class CanvasView extends View
         }
     }
 
+    // Activated when the user touches the canvas
     private void startTouch(float x, float y)
     {
         float sx = Math.abs(x - startingPointX);
@@ -273,8 +285,6 @@ public class CanvasView extends View
 
                 patternTiming.startTiming();
                 targetTiming.startTiming();
-
-
             }
             else
             {
@@ -289,6 +299,7 @@ public class CanvasView extends View
         }
     }
 
+    // Activated after the user has touched the canvas and then moves the point of contact
     private void moveTouch(float x, float y)
     {
         targetCheck(x, y);
@@ -308,12 +319,29 @@ public class CanvasView extends View
         }
     }
 
+    // Clears the canvas
     private void clearCanvas()
     {
+        // Outputs test info to console
         writeToConsole();
+
+        // Compares times
+        compareTimings(targetTiming.printTimingList(patternCounter), patternTiming.printTimingList(patternCounter));
+
+
+
+        // Add list of x and y coordinates to the coordinates list
+        coordsList.add(new ArrayList<>(xyList));
+
+
+        // Clears the list of x and y coordinates before new pattern
+        xyList.clear();
+
+
 
         if (patternCounter >= patternList.size())
         {
+            // dataStructureCheck();
             patternCounter = 0;
         }
 
@@ -327,11 +355,13 @@ public class CanvasView extends View
         invalidate();
     }
 
+    // Activated when the user lifts
     private void upTouch()
     {
         mPath.lineTo(mX, mY);
     }
 
+    // Handles the users touch interactions.
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
@@ -366,11 +396,24 @@ public class CanvasView extends View
         }
     }
 
-
+    public ArrayList<ArrayList<Float>> getCoordsList()
+    {
+        return coordsList;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     //////////////////////////////////TESTING//////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
+    private void storeCoordinates(float x, float y)
+    {
+        /*
+        xList.add(x);
+        yList.add(y);
+        */
+
+        xyList.add(x);
+        xyList.add(y);
+    }
 
     private void writeToConsole()
     {
@@ -381,13 +424,15 @@ public class CanvasView extends View
             System.out.println("X co-ordinate: " + xList.get(i) + " for pattern " + patternCounter);
             System.out.println("Y co-ordinate: " + yList.get(i) + " for pattern " + patternCounter);
         }
+
+
+        for (int i = 0; i < xyList.size(); i = i + 2 )
+        {
+            System.out.println("Co-ordinate: " + ( i + 1 ) + "");
+            System.out.println("X co-ordinate: " + xyList.get(i) + " for pattern " + patternCounter);
+            System.out.println("Y co-ordinate: " + xyList.get(i + 1) + " for pattern " + patternCounter);
+        }
         */
-
-        compareTimings(targetTiming.printTimingList(patternCounter), patternTiming.printTimingList(patternCounter));
-
-        xList.clear();
-        yList.clear();
-
     }
 
     private void compareTimings(double totalTargetTime, double totalPattenTime)
@@ -404,13 +449,31 @@ public class CanvasView extends View
         }
     }
 
-
-
-    private void storeCoordinates(float x, float y)
+    /*
+    private void dataStructureCheck()
     {
-        xList.add(x);
-        yList.add(y);
+        System.out.println("SIZE OF LIST - " + coordsList.size());
+        System.out.println("SIZE OF LIST INSIDE THE LIST 1 - " + coordsList.get(0).size());
+        System.out.println("SIZE OF LIST INSIDE THE LIST 2 - " + coordsList.get(1).size());
+
+
+        for (int i = 0; i < coordsList.size(); i++)
+        {
+            for (int j = 0; j < coordsList.get(i).size(); j = j + 2)
+            {
+                int pattern = i;
+                float x = coordsList.get(i).get(j);
+                float y = coordsList.get(i).get(j + 1);
+
+
+                System.out.println(pattern);
+                System.out.println(x);
+                System.out.println(y);
+            }
+        }
     }
+    */
+
     ///////////////////////////////////////////////////////////////////////////
 }
 

@@ -9,13 +9,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper
 {
     // Database Setup
-    static final String DATABASE_NAME = "users.db";
+    private static final String DATABASE_NAME = "users.db";
 
     // Student Table Setup
-    public static final String TABLE_NAME = "users_table";
-    public static final String COL_1 = "ID";
-    public static final String COL_2 = "NAME";
-    public static final String COL_3 = "DATE";
+    private static final String TABLE_NAME = "coordinates";
+    private static final String COL_1 = "ID";
+    private static final String COL_2 = "PATTERN";
+    private static final String COL_3 = "X";
+    private static final String COL_4 = "Y";
 
 
 
@@ -28,7 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase db)
     {
         //db.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, NAME TEXT, DATE TEXT)");
-        db.execSQL("CREATE TABLE " + TABLE_NAME + " ( " + COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_2 + " TEXT, " + COL_3 + " TEXT)");
+        db.execSQL("CREATE TABLE " + TABLE_NAME + " ( " + COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_2 + " INTEGER, " + COL_3 + " REAL, " + COL_4 + " REAL )");
     }
 
     @Override
@@ -38,13 +39,14 @@ public class DatabaseHelper extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    public boolean insertData(String name, String date)
+    public boolean insertData(int pattern, float x, float y)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(COL_2, name);
-        contentValues.put(COL_3, date);
+        contentValues.put(COL_2, pattern);
+        contentValues.put(COL_3, x);
+        contentValues.put(COL_4, y);
 
 
         // If the insert fails a value of -1 is returned.
@@ -60,6 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
     }
 
+    /*
     public Cursor getAllData()
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -68,6 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
         return res;
     }
+    */
 
     public String getDatabaseName()
     {
