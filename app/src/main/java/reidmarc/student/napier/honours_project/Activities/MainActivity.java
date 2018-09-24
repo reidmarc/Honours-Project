@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity
                 if (sd.canWrite())
                 {
                     String currentDBPath = String.format("//data//%s//databases//%s", packageName, myDb.getDatabaseName());
-                    String backupDBPath = "backup.db";
+                    String backupDBPath = "student_data.db";
                     File currentDB = new File(data, currentDBPath);
                     File backupDB = new File(sd, backupDBPath);
 
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-
+                /*
                 boolean isInserted = false;
                 int counter = 0;
 
@@ -203,6 +203,26 @@ public class MainActivity extends AppCompatActivity
                 {
                     Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_LONG).show();
                 }
+                */
+
+                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+                dbInsertTiming.startTiming();
+                boolean insertCompleted = myDb.insertXYData(canvasView.getCoordsList());
+                System.out.println("TIME TAKEN TO INSERT DATA: " + dbInsertTiming.timeDurationSeconds());
+
+                if (insertCompleted)
+                {
+                    Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, "Data NOT Inserted", Toast.LENGTH_LONG).show();
+                }
+
+
+
 
 
             }

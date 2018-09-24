@@ -7,11 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.renderscript.Sampler;
+import android.widget.Toast;
+import reidmarc.student.napier.honours_project.Activities.MainActivity;
+
+import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper
 {
     // Database Setup
-    private static final String DATABASE_NAME = "users.db";
+    private static final String DATABASE_NAME = "student_data.db";
 
     // Student Table Setup
     private static final String TABLE_NAME = "coordinates";
@@ -41,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    public boolean insertData(int pattern, float x, float y)
+    public boolean insertXYData(ArrayList<ArrayList<Float>> coordsListOfLists)
     {
         /*
         SQLiteDatabase db = this.getWritableDatabase();
@@ -66,17 +70,56 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
         */
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(COL_2, pattern);
-        contentValues.put(COL_3, x);
-        contentValues.put(COL_4, y);
+        String sql = "INSERT INTO " + TABLE_NAME + " (" + COL_2 + ", " + COL_3 + ", " + COL_4 + ") VALUES (?, ?, ?)";
+        // String sql = "     INSERT INTO " + TABLE_NAME + " VALUES (" + COL_2 + ", " + COL_3 + ", " + COL_4 +"); ";
+        SQLiteStatement sqLiteStatement = db.compileStatement(sql);
+
+        long result = 0;
+
+        db.beginTransaction();
+
+        try
+        {
+            for (int i = 0; i < coordsListOfLists.size(); i++)
+            {
+                for (int j = 0; j < coordsListOfLists.get(i).size(); j = j + 2)
+                {
+                    int pattern = i;
+                    float x = coordsListOfLists.get(i).get(j);
+                    float y = coordsListOfLists.get(i).get(j + 1);
+
+                    /*
+                    contentValues.put(COL_2, pattern);
+                    contentValues.put(COL_3, x);
+                    contentValues.put(COL_4, y);
+                    result = db.insert(TABLE_NAME, null, contentValues);
+                    */
+
+                    sqLiteStatement.clearBindings();
+                    sqLiteStatement.bindDouble(1, pattern);
+                    sqLiteStatement.bindDouble(2, x);
+                    sqLiteStatement.bindDouble(3, y);
+                    sqLiteStatement.execute();
+
+
+                }
+            }
+            db.setTransactionSuccessful();
+        }
+        finally
+        {
+            db.endTransaction();
+        }
 
         //String sql = "INSERT INTO " + TABLE_NAME + " (" + COL_2 + ", " + COL_3 + ", " + COL_4 + ") VALUES (?, ?, ?)";
 
         // If the insert fails a value of -1 is returned.
-        long result = db.insert(TABLE_NAME, null, contentValues);
+
 
         if (result == -1)
         {

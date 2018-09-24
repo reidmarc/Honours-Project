@@ -138,7 +138,7 @@ public class CanvasView extends View
         patternList.add(patternTwo);
 
 
-        /*
+
 
 
         // --------------------- 9 DOT PATTERNS ---------------------
@@ -185,7 +185,8 @@ public class CanvasView extends View
         patternList.add(patternEight);
 
 
-        */
+
+
 
     }
 
