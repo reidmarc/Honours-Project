@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
-import reidmarc.student.napier.honours_project.Activities.MainActivity;
 
 
 import java.text.DecimalFormat;
@@ -78,11 +77,15 @@ public class CanvasView extends View
     private Timing patternTiming;
     private Timing targetTiming;
     private Timing pauseTiming;
+    private Timing liftTiming;
 
-    private boolean targetTimingStarted;
+    private boolean hasLifted = false;
+    private boolean hasPauseTimerStarted = false;
+
+    private float previousX;
+    private float previousY;
 
 
-    // Database related
 
 
 
@@ -119,6 +122,7 @@ public class CanvasView extends View
         patternTiming = new Timing();
         targetTiming = new Timing();
         pauseTiming = new Timing();
+        liftTiming = new Timing();
     }
 
 
@@ -138,7 +142,7 @@ public class CanvasView extends View
         patternList.add(patternTwo);
 
 
-
+        /*
 
 
         // --------------------- 9 DOT PATTERNS ---------------------
@@ -184,7 +188,7 @@ public class CanvasView extends View
         patternList.add(patternSeven);
         patternList.add(patternEight);
 
-
+        */
 
 
 
@@ -258,11 +262,6 @@ public class CanvasView extends View
                 {
                     patternTiming.addTimeToList(patternTiming.timeDurationSeconds());
 
-                    // TESTING
-                    // targetTiming.printTimingList(patternCounter);
-                    //
-
-
                     patternCounter = patternCounter + 1;
 
                     String toastText = "You have completed pattern # " + patternCounter + " of " + patternList.size() + " in " + new DecimalFormat("#.##").format(patternTiming.timeDurationSeconds()) + " seconds.";
@@ -303,26 +302,68 @@ public class CanvasView extends View
             mX = x;
             mY = y;
         }
+
+
+        if (hasLifted)
+        {
+            System.out.println("LIFT for - " + liftTiming.timeDurationSeconds() + " on pattern " + patternCounter + " between dots " + targetCounter + " and " + (targetCounter + 1) +"");
+            hasLifted = false;
+        }
+
+
     }
 
     // Activated after the user has touched the canvas and then moves the point of contact
     private void moveTouch(float x, float y)
     {
-        targetCheck(x, y);
 
-        if (hasStarted)
-        {
-            float dx = Math.abs(x - mX);
-            float dy = Math.abs(y - mY);
+            targetCheck(x, y);
+            pauseCheck(x, y);
 
-            if (dx >= TOLERANCE || dy >= TOLERANCE)
+            if (hasStarted)
             {
-                storeCoordinates(x, y);
-                mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
-                mX = x;
-                mY = y;
+                float dx = Math.abs(x - mX);
+                float dy = Math.abs(y - mY);
+
+                if (dx >= TOLERANCE || dy >= TOLERANCE)
+                {
+                    storeCoordinates(x, y);
+                    mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
+                    mX = x;
+                    mY = y;
+                }
+            }
+
+    }
+
+    private void pauseCheck(float x, float y)
+    {
+        float xDiff = Math.abs(x - previousX);
+        float yDiff = Math.abs(y - previousY);
+
+        if (hasPauseTimerStarted)
+        {
+            if (xDiff > 0.25 || yDiff > 0.25)
+            {
+                // These values need fine tuned
+                // if (pauseTiming.timeDurationSeconds() > 0.5 && (xDiff > 0.25 || yDiff > 0.25))
+                if (pauseTiming.timeDurationSeconds() > 0.50)
+                {
+                    System.out.println("PAUSED for " + pauseTiming.timeDurationSeconds() + " on pattern " + patternCounter + " between dots " + targetCounter + " and " + (targetCounter + 1) + "");
+                }
+                hasPauseTimerStarted = false;
             }
         }
+        else
+        {
+            pauseTiming.startTiming();
+            hasPauseTimerStarted = true;
+        }
+
+        previousX = x;
+        previousY = y;
+
+
     }
 
     // Clears the canvas
@@ -339,6 +380,9 @@ public class CanvasView extends View
 
         // Clears the list of x and y coordinates before new pattern
         xyList.clear();
+
+        // resets pause timer for new pattern
+        hasPauseTimerStarted = false;
 
 
 
@@ -361,7 +405,16 @@ public class CanvasView extends View
     // Activated when the user lifts
     private void upTouch()
     {
+        // lift logic here?
         mPath.lineTo(mX, mY);
+
+
+        if (hasStarted)
+        {
+            hasLifted = true;
+            liftTiming.startTiming();
+        }
+
     }
 
     // Handles the users touch interactions.
@@ -443,31 +496,8 @@ public class CanvasView extends View
         }
     }
 
-    /*
-    private void dataStructureCheck()
-    {
-        System.out.println("SIZE OF LIST - " + coordsList.size());
-        System.out.println("SIZE OF LIST INSIDE THE LIST 1 - " + coordsList.get(0).size());
-        System.out.println("SIZE OF LIST INSIDE THE LIST 2 - " + coordsList.get(1).size());
-
-
-        for (int i = 0; i < coordsList.size(); i++)
-        {
-            for (int j = 0; j < coordsList.get(i).size(); j = j + 2)
-            {
-                int pattern = i;
-                float x = coordsList.get(i).get(j);
-                float y = coordsList.get(i).get(j + 1);
-
-
-                System.out.println(pattern);
-                System.out.println(x);
-                System.out.println(y);
-            }
-        }
-    }
-    */
-
+    ///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
 }
 

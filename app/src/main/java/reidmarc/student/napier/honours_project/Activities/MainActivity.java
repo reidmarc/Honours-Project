@@ -19,17 +19,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity
 {
     private TextView nameTextView, dateTextView;
-    private String incomingName, currentDate;
+    private String incomingName, currentDate, currentDateTime;
     private Button backButton, addButton, exportButton, clearButton;
     private DatabaseHelper myDb;
     private CanvasView canvasView;
     private Timing dbInsertTiming;
+    private Today today;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,10 +52,14 @@ public class MainActivity extends AppCompatActivity
 
         myDb = new DatabaseHelper(MainActivity.this);
 
+        today = new Today();
+
         setTheDate();
         setupBackButton();
         exportDatabase();
         addData();
+
+
 
 
         dbInsertTiming = new Timing();
@@ -79,7 +83,7 @@ public class MainActivity extends AppCompatActivity
 
     private void setTheDate()
     {
-        Today today = new Today();
+
         currentDate = today.getAbbrToday();
 
         if (currentDate == null)
@@ -95,7 +99,6 @@ public class MainActivity extends AppCompatActivity
 
     private void exportDatabase()
     {
-
         exportButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -104,7 +107,6 @@ public class MainActivity extends AppCompatActivity
                 copyDatabaseFile();
             }
         });
-
     }
 
     private void copyDatabaseFile()
@@ -118,10 +120,16 @@ public class MainActivity extends AppCompatActivity
 
                 String packageName = getApplicationContext().getApplicationInfo().packageName;
 
+                currentDateTime = today.getAbbrTodayAndTime();
+
+
+
                 if (sd.canWrite())
                 {
                     String currentDBPath = String.format("//data//%s//databases//%s", packageName, myDb.getDatabaseName());
-                    String backupDBPath = "student_data.db";
+                    // String backupDBPath = currentDateTime + ".txt";
+                    String backupDBPath = String.format("//Database//%s.db", currentDateTime);
+
                     File currentDB = new File(data, currentDBPath);
                     File backupDB = new File(sd, backupDBPath);
 
@@ -168,70 +176,21 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                /*
-                boolean isInserted = false;
-                int counter = 0;
-
-                ArrayList<ArrayList<Float>> coordsListOfLists = canvasView.getCoordsList();
-
-
-                dbInsertTiming.startTiming();
-
-                for (int i = 0; i < coordsListOfLists.size(); i++)
-                {
-                    for (int j = 0; j < coordsListOfLists.get(i).size(); j = j + 2)
-                    {
-                        int pattern = i;
-                        float x = coordsListOfLists.get(i).get(j);
-                        float y = coordsListOfLists.get(i).get(j + 1);
-
-                        isInserted = myDb.insertData(pattern, x, y );
-
-                        if (!isInserted && counter < 1)
-                        {
-                            Toast.makeText(MainActivity.this, "Data NOT Inserted", Toast.LENGTH_LONG).show();
-                            counter = counter + 1;
-                        }
-                    }
-                }
-
-                System.out.println("TIME TAKEN TO INSERT DATA: " + dbInsertTiming.timeDurationSeconds());
-
-
-
-                if (counter == 0)
-                {
-                    Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_LONG).show();
-                }
-                */
-
-                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-                dbInsertTiming.startTiming();
+                dbInsertTiming.startTiming();                                                               // <----------  TESTING
                 boolean insertCompleted = myDb.insertXYData(canvasView.getCoordsList());
-                System.out.println("TIME TAKEN TO INSERT DATA: " + dbInsertTiming.timeDurationSeconds());
+                System.out.println("TIME TAKEN TO INSERT DATA: " + dbInsertTiming.timeDurationSeconds());   // <----------  TESTING
 
                 if (insertCompleted)
                 {
-                    Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "DATA INSERTED", Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    Toast.makeText(MainActivity.this, "Data NOT Inserted", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "DATA NOT INSERTED", Toast.LENGTH_LONG).show();
                 }
-
-
-
-
 
             }
         });
     }
-
-
-
-
-
 }
 

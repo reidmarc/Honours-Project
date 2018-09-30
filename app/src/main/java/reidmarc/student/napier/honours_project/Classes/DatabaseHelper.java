@@ -1,14 +1,11 @@
 package reidmarc.student.napier.honours_project.Classes;
 
-import android.content.ContentValues;
+
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
-import android.renderscript.Sampler;
-import android.widget.Toast;
-import reidmarc.student.napier.honours_project.Activities.MainActivity;
+
 
 import java.util.ArrayList;
 
@@ -47,39 +44,11 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
     public boolean insertXYData(ArrayList<ArrayList<Float>> coordsListOfLists)
     {
-        /*
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-
-        contentValues.put(COL_2, pattern);
-        contentValues.put(COL_3, x);
-        contentValues.put(COL_4, y);
-
-        //String sql = "INSERT INTO " + TABLE_NAME + " (" + COL_2 + ", " + COL_3 + ", " + COL_4 + ") VALUES (?, ?, ?)";
-
-        // If the insert fails a value of -1 is returned.
-        long result = db.insert(TABLE_NAME, null, contentValues);
-
-        if (result == -1)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-        */
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-
         String sql = "INSERT INTO " + TABLE_NAME + " (" + COL_2 + ", " + COL_3 + ", " + COL_4 + ") VALUES (?, ?, ?)";
-        // String sql = "     INSERT INTO " + TABLE_NAME + " VALUES (" + COL_2 + ", " + COL_3 + ", " + COL_4 +"); ";
         SQLiteStatement sqLiteStatement = db.compileStatement(sql);
 
-        long result = 0;
+        boolean wasInsertSuccessful = false;
 
         db.beginTransaction();
 
@@ -93,45 +62,35 @@ public class DatabaseHelper extends SQLiteOpenHelper
                     float x = coordsListOfLists.get(i).get(j);
                     float y = coordsListOfLists.get(i).get(j + 1);
 
-                    /*
-                    contentValues.put(COL_2, pattern);
-                    contentValues.put(COL_3, x);
-                    contentValues.put(COL_4, y);
-                    result = db.insert(TABLE_NAME, null, contentValues);
-                    */
-
                     sqLiteStatement.clearBindings();
                     sqLiteStatement.bindDouble(1, pattern);
                     sqLiteStatement.bindDouble(2, x);
                     sqLiteStatement.bindDouble(3, y);
                     sqLiteStatement.execute();
-
-
                 }
             }
             db.setTransactionSuccessful();
+            wasInsertSuccessful = true;
+
+        }
+        catch(Exception ex)
+        {
+            System.out.println("Error: " + ex);
         }
         finally
         {
             db.endTransaction();
         }
 
-        //String sql = "INSERT INTO " + TABLE_NAME + " (" + COL_2 + ", " + COL_3 + ", " + COL_4 + ") VALUES (?, ?, ?)";
 
-        // If the insert fails a value of -1 is returned.
-
-
-        if (result == -1)
-        {
-            return false;
-        }
-        else
+        if (wasInsertSuccessful)
         {
             return true;
         }
-
-
-
+        else
+        {
+            return false;
+        }
     }
 
     /*

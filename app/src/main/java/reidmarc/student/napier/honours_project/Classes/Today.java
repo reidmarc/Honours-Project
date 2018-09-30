@@ -1,6 +1,7 @@
 package reidmarc.student.napier.honours_project.Classes;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -13,6 +14,8 @@ public class Today
     private int month;
     private int day;
     private String monthAbbr;
+    private long time;
+
 
     public Today()
     {
@@ -23,8 +26,15 @@ public class Today
         day = now.get(Calendar.DATE);
         monthAbbr = months[month - 1];
         sqlDay = new Date(System.currentTimeMillis());
+        time = System.currentTimeMillis();
+
     }
 
+
+    public String getAbbrTodayAndTime()
+    {
+        return  "[" + day + ", " + month + ", " + year + " - " + time + "]";
+    }
 
     public String getToday()
     {
