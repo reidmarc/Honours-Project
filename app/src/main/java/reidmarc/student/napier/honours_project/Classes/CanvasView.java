@@ -148,7 +148,7 @@ public class CanvasView extends View
         patternList.add(patternTwo);
 
 
-
+        /*
 
 
         // --------------------- 9 DOT PATTERNS ---------------------
@@ -195,7 +195,7 @@ public class CanvasView extends View
         patternList.add(patternEight);
 
 
-
+        */
 
 
     }
@@ -331,6 +331,24 @@ public class CanvasView extends View
         {
             System.out.println("LIFT for - " + liftTiming.timeDurationSeconds() + " on pattern " + patternCounter + " between dots " + targetCounter + " and " + (targetCounter + 1) +"");
             // Add this data to an arraylist needs xy coords
+
+
+            // Add sector time to list for that pattern
+            float patternNum = (float) patternCounter;
+            float targetNum = (float) targetCounter;
+            float pauseTime = (float) pauseTiming.timeDurationSeconds();
+
+            liftList.add(patternNum);
+            liftList.add(targetNum);
+            liftList.add(pauseTime);
+
+            // These coords may need to altered?
+            liftList.add(previousX);
+            liftList.add(previousY);
+            liftList.add(x);
+            liftList.add(y);
+
+
             hasLifted = false;
         }
     }
@@ -436,14 +454,6 @@ public class CanvasView extends View
 
             }
         }
-
-
-
-
-
-
-
-
 
         // resets pause timer for new pattern
         hasPauseTimerStarted = false;

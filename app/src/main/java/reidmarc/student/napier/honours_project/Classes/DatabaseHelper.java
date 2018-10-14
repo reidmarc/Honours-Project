@@ -537,7 +537,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String sql = "INSERT INTO " + TABLE_06_NAME + " (" + TABLE_06_COL_01 + " , " + TABLE_06_COL_02 + " , " + TABLE_06_COL_03 + " , " + TABLE_06_COL_04 + " , " + TABLE_06_COL_05 + " , " + TABLE_06_COL_06 + " , " + TABLE_06_COL_07 + " , " + TABLE_06_COL_08 + " , " + TABLE_06_COL_09 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO " + TABLE_05_NAME + " (" + TABLE_05_COL_01 + " , " + TABLE_05_COL_02 + " , " + TABLE_05_COL_03 + " , " + TABLE_05_COL_04 + " , " + TABLE_05_COL_05 + " , " + TABLE_05_COL_06 + " , " + TABLE_05_COL_07 + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
         SQLiteStatement sqLiteStatement = db.compileStatement(sql);
 
         boolean wasInsertSuccessful = false;
@@ -611,7 +611,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         SQLiteDatabase db = this.getWritableDatabase();
 
 
-        String sql = "INSERT INTO " + TABLE_05_NAME + " (" + TABLE_05_COL_01 + " , " + TABLE_05_COL_02 + " , " + TABLE_05_COL_03 + " , " + TABLE_05_COL_04 + " , " + TABLE_05_COL_05 + " , " + TABLE_05_COL_06 + " , " + TABLE_05_COL_07 + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO " + TABLE_06_NAME + " (" + TABLE_06_COL_01 + " , " + TABLE_06_COL_02 + " , " + TABLE_06_COL_03 + " , " + TABLE_06_COL_04 + " , " + TABLE_06_COL_05 + " , " + TABLE_06_COL_06 + " , " + TABLE_06_COL_07 + " , " + TABLE_06_COL_08 + " , " + TABLE_06_COL_09 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SQLiteStatement sqLiteStatement = db.compileStatement(sql);
 
         boolean wasInsertSuccessful = false;
@@ -624,11 +624,11 @@ public class DatabaseHelper extends SQLiteOpenHelper
             {
                 Float patternNumber = liftData.get(j);
                 Float sectorNumber = liftData.get(j + 1);
-                Float pauseTiming = liftData.get(j + 2);
+                Float liftTiming = liftData.get(j + 2);
 
                 int patternNo = (patternNumber.intValue() + 1);
                 int sectorNo = (sectorNumber.intValue() + 1);
-                double liftTime = pauseTiming.doubleValue();
+                double liftTime = liftTiming.doubleValue();
 
                 float xStart = liftData.get(j + 3);
                 float yStart = liftData.get(j + 4);
