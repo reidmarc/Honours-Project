@@ -9,10 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import reidmarc.student.napier.honours_project.*;
-import reidmarc.student.napier.honours_project.Classes.CanvasView;
-import reidmarc.student.napier.honours_project.Classes.DatabaseHelper;
-import reidmarc.student.napier.honours_project.Classes.Timing;
-import reidmarc.student.napier.honours_project.Classes.Today;
+import reidmarc.student.napier.honours_project.Classes.*;
 
 
 import java.io.File;
@@ -30,6 +27,7 @@ public class MainActivity extends AppCompatActivity
     private CanvasView canvasView;
     private Timing dbInsertTiming;
     private Today today;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,6 +49,7 @@ public class MainActivity extends AppCompatActivity
         canvasView = findViewById(R.id.canvas);
 
         myDb = new DatabaseHelper(MainActivity.this);
+
 
         today = new Today();
 
@@ -177,10 +176,36 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 dbInsertTiming.startTiming();                                                               // <----------  TESTING
-                boolean insertCompleted = myDb.insertXYData(canvasView.getCoordsList());
+
+
+
+
+
+
+
+
+
+                boolean insertUserCompleted = myDb.insertUserTable(incomingName);
+
+
+                boolean insertPatternsCompleted = myDb.insertPatternTable(canvasView.getPatternsList());
+
+                boolean insertCollectionCompleted = myDb.insertCollectionTable(today.getAbbrTodayAndTime(), incomingName);
+
+                boolean insertTimingsCompleted = myDb.insertTimingsTable(canvasView.getSectorTimingListOfLists());
+
+                boolean insertCoordsCompleted = myDb.insertCoordsTable(canvasView.getCoordsListOfLists());
+
+                boolean insertPauseCompleted = myDb.insertPauseTable(canvasView.getPauseTimingList());
+
+
+
+
+
+
                 System.out.println("TIME TAKEN TO INSERT DATA: " + dbInsertTiming.timeDurationSeconds());   // <----------  TESTING
 
-                if (insertCompleted)
+                if (insertUserCompleted && insertPatternsCompleted && insertCollectionCompleted && insertTimingsCompleted && insertCoordsCompleted && insertPauseCompleted)
                 {
                     Toast.makeText(MainActivity.this, "DATA INSERTED", Toast.LENGTH_LONG).show();
                 }

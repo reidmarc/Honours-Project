@@ -50,13 +50,13 @@ public class CanvasView extends View
     private Paint targetCirclePaint;
     private int targetCircleRadius = 5;
 
-    // Arraylist to store co-ords
-    //private ArrayList<Float> xList = new ArrayList<>();
-    //private ArrayList<Float> yList = new ArrayList<>();
-
+    // Arraylists to store drawn path data
     private ArrayList<Float> xyList = new ArrayList<>();
-
     private ArrayList<ArrayList<Float>> coordsList = new ArrayList<>();
+
+    // Arraylists to store pause data
+    private ArrayList<Float> pauseList = new ArrayList<>();
+    //private ArrayList<ArrayList<Float>> pauseListOfLists = new ArrayList<>();
 
 
     private boolean hasStarted = false;
@@ -68,12 +68,15 @@ public class CanvasView extends View
 
 
 
-
+    // Counters
     private int targetCounter = 0;
     private int patternCounter = 0;
 
 
     // Related to timing
+    private ArrayList<Double> sectorTimingList = new ArrayList<>();
+    private ArrayList<ArrayList<Double>> sectorTimingListOfLists = new ArrayList<>();
+
     private Timing patternTiming;
     private Timing targetTiming;
     private Timing pauseTiming;
@@ -194,6 +197,7 @@ public class CanvasView extends View
 
     }
 
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh)
     {
@@ -202,6 +206,7 @@ public class CanvasView extends View
         mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
     }
+
 
     @Override
     protected void onDraw(Canvas canvas)
@@ -216,6 +221,7 @@ public class CanvasView extends View
 
         drawTargetCircles(canvas);
     }
+
 
     private void drawTargetCircles(Canvas canvas)
     {
@@ -233,9 +239,6 @@ public class CanvasView extends View
     }
 
 
-
-
-
     private void targetCheck(float x, float y)
     {
         float tx = Math.abs(x - patternList.get(patternCounter)[targetCounter][0]);
@@ -245,7 +248,24 @@ public class CanvasView extends View
         {
             if (tx < TARGET_TOLERANCE && ty < TARGET_TOLERANCE)
             {
-                targetTiming.addTimeToList(targetTiming.timeDurationSeconds());
+                targetTiming.addTimeToList(targetTiming.timeDurationSeconds()); // might not be needed anymore
+
+                // Add sector time to list for that pattern
+                double patternNum = (double) patternCounter;
+                double targetNum = (double) targetCounter;
+
+
+                sectorTimingList.add(patternNum);
+                sectorTimingList.add(targetNum);
+                sectorTimingList.add(targetTiming.timeDurationSeconds());
+
+                /*
+                System.out.println("Pattern Counter is: " + patternCounter);
+                System.out.println("Target Counter is: " + targetCounter);
+                System.out.println("Sector Time: " + targetTiming.timeDurationSeconds());
+                */
+
+
 
                 if (targetCounter < patternList.get(patternCounter).length - 1)
                 {
@@ -307,39 +327,42 @@ public class CanvasView extends View
         if (hasLifted)
         {
             System.out.println("LIFT for - " + liftTiming.timeDurationSeconds() + " on pattern " + patternCounter + " between dots " + targetCounter + " and " + (targetCounter + 1) +"");
+            // Add this data to an arraylist needs xy coords
             hasLifted = false;
         }
-
-
     }
+
 
     // Activated after the user has touched the canvas and then moves the point of contact
     private void moveTouch(float x, float y)
     {
+        targetCheck(x, y);
 
-            targetCheck(x, y);
+
+        if (hasStarted)
+        {
+            float dx = Math.abs(x - mX);
+            float dy = Math.abs(y - mY);
+
             pauseCheck(x, y);
 
-            if (hasStarted)
+            if (dx >= TOLERANCE || dy >= TOLERANCE)
             {
-                float dx = Math.abs(x - mX);
-                float dy = Math.abs(y - mY);
-
-                if (dx >= TOLERANCE || dy >= TOLERANCE)
-                {
-                    storeCoordinates(x, y);
-                    mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
-                    mX = x;
-                    mY = y;
-                }
+                storeCoordinates(x, y);
+                mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
+                mX = x;
+                mY = y;
             }
-
+        }
     }
+
 
     private void pauseCheck(float x, float y)
     {
         float xDiff = Math.abs(x - previousX);
         float yDiff = Math.abs(y - previousY);
+
+        //System.out.println(x + " - " + y);
 
         if (hasPauseTimerStarted)
         {
@@ -349,7 +372,22 @@ public class CanvasView extends View
                 // if (pauseTiming.timeDurationSeconds() > 0.5 && (xDiff > 0.25 || yDiff > 0.25))
                 if (pauseTiming.timeDurationSeconds() > 0.50)
                 {
-                    System.out.println("PAUSED for " + pauseTiming.timeDurationSeconds() + " on pattern " + patternCounter + " between dots " + targetCounter + " and " + (targetCounter + 1) + "");
+                    System.out.println("----------------------------------PAUSED for " + pauseTiming.timeDurationSeconds() + " on pattern " + patternCounter + " between dots " + targetCounter + " and " + (targetCounter + 1) + "");
+                    // add this data to an array list needs xy coords
+
+
+                    // Add sector time to list for that pattern
+                    float patternNum = (float) patternCounter;
+                    float targetNum = (float) targetCounter;
+                    float pauseTime = (float) pauseTiming.timeDurationSeconds();
+
+                    pauseList.add(patternNum);
+                    pauseList.add(targetNum);
+                    pauseList.add(pauseTime);
+                    pauseList.add(previousX);
+                    pauseList.add(previousY);
+
+
                 }
                 hasPauseTimerStarted = false;
             }
@@ -362,8 +400,6 @@ public class CanvasView extends View
 
         previousX = x;
         previousY = y;
-
-
     }
 
     // Clears the canvas
@@ -381,8 +417,37 @@ public class CanvasView extends View
         // Clears the list of x and y coordinates before new pattern
         xyList.clear();
 
+
+        // Add list of current patterns sector times to the whole collection list of sector times
+        sectorTimingListOfLists.add(new ArrayList<>(sectorTimingList));
+
+        sectorTimingList.clear();
+
+
+
+        for (int i = 0; i < sectorTimingListOfLists.size(); i++)
+        {
+            for (int j = 0; j < sectorTimingListOfLists.get(i).size(); j++)
+            {
+                //System.out.println("VALUES ETC -- " + sectorTimingListOfLists.get(i).get(j));
+
+            }
+        }
+
+
+
+
+
+
+
+
+
         // resets pause timer for new pattern
         hasPauseTimerStarted = false;
+
+        // Resets previous X and Y values before next pattern
+        previousX = 0;
+        previousY = 0;
 
 
 
@@ -456,9 +521,24 @@ public class CanvasView extends View
         }
     }
 
-    public ArrayList<ArrayList<Float>> getCoordsList()
+    public ArrayList<ArrayList<Float>> getCoordsListOfLists()
     {
         return coordsList;
+    }
+
+    public ArrayList<int[][]> getPatternsList()
+    {
+        return patternList;
+    }
+
+    public ArrayList<ArrayList<Double>> getSectorTimingListOfLists()
+    {
+        return sectorTimingListOfLists;
+    }
+
+    public ArrayList<Float> getPauseTimingList()
+    {
+        return pauseList;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -466,6 +546,15 @@ public class CanvasView extends View
     ///////////////////////////////////////////////////////////////////////////
     private void storeCoordinates(float x, float y)
     {
+
+        float patternNum = (float) patternCounter;
+        float targetNum = (float) targetCounter;
+
+
+        xyList.add(patternNum);
+        xyList.add(targetNum);
+
+
         xyList.add(x);
         xyList.add(y);
     }
