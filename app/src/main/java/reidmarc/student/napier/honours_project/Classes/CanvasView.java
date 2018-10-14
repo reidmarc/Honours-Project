@@ -21,7 +21,7 @@ public class CanvasView extends View
     private float mX, mY;
     private static final float TARGET_TOLERANCE = 10;
     private static final float START_TOLERANCE = 20;
-    private static final float TOLERANCE = 1;
+    private static final float TOLERANCE = 0.5f;
     private Context context;
 
     // Draw the dividing line
@@ -56,7 +56,10 @@ public class CanvasView extends View
 
     // Arraylists to store pause data
     private ArrayList<Float> pauseList = new ArrayList<>();
-    //private ArrayList<ArrayList<Float>> pauseListOfLists = new ArrayList<>();
+
+
+    // Arraylists to store pause data
+    private ArrayList<Float> liftList = new ArrayList<>();
 
 
     private boolean hasStarted = false;
@@ -145,7 +148,7 @@ public class CanvasView extends View
         patternList.add(patternTwo);
 
 
-        /*
+
 
 
         // --------------------- 9 DOT PATTERNS ---------------------
@@ -191,7 +194,7 @@ public class CanvasView extends View
         patternList.add(patternSeven);
         patternList.add(patternEight);
 
-        */
+
 
 
 
@@ -539,6 +542,11 @@ public class CanvasView extends View
     public ArrayList<Float> getPauseTimingList()
     {
         return pauseList;
+    }
+
+    public ArrayList<Float> getLiftTimingList()
+    {
+        return liftList;
     }
 
     ///////////////////////////////////////////////////////////////////////////

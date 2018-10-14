@@ -187,7 +187,6 @@ public class MainActivity extends AppCompatActivity
 
                 boolean insertUserCompleted = myDb.insertUserTable(incomingName);
 
-
                 boolean insertPatternsCompleted = myDb.insertPatternTable(canvasView.getPatternsList());
 
                 boolean insertCollectionCompleted = myDb.insertCollectionTable(today.getAbbrTodayAndTime(), incomingName);
@@ -198,6 +197,8 @@ public class MainActivity extends AppCompatActivity
 
                 boolean insertPauseCompleted = myDb.insertPauseTable(canvasView.getPauseTimingList());
 
+                boolean insertLiftCompleted = myDb.insertLiftTable(canvasView.getLiftTimingList());
+
 
 
 
@@ -205,7 +206,7 @@ public class MainActivity extends AppCompatActivity
 
                 System.out.println("TIME TAKEN TO INSERT DATA: " + dbInsertTiming.timeDurationSeconds());   // <----------  TESTING
 
-                if (insertUserCompleted && insertPatternsCompleted && insertCollectionCompleted && insertTimingsCompleted && insertCoordsCompleted && insertPauseCompleted)
+                if (insertUserCompleted && insertPatternsCompleted && insertCollectionCompleted && insertTimingsCompleted && insertCoordsCompleted && insertPauseCompleted && insertLiftCompleted)
                 {
                     Toast.makeText(MainActivity.this, "DATA INSERTED", Toast.LENGTH_LONG).show();
                 }

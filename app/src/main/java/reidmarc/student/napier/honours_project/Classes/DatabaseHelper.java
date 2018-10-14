@@ -256,7 +256,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
         catch(Exception ex)
         {
-            System.out.println("Error: " + ex);
+            System.out.println("insertUserTable - Error: " + ex);
         }
         finally
         {
@@ -331,7 +331,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
         catch(Exception ex)
         {
-            System.out.println("Error: " + ex);
+            System.out.println("insertPatternTable - Error: " + ex);
         }
         finally
         {
@@ -377,7 +377,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
         catch(Exception ex)
         {
-            System.out.println("Error: " + ex);
+            System.out.println("insertCollectionTable - Error: " + ex);
         }
         finally
         {
@@ -394,24 +394,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
             return false;
         }
     }
-
-
-
-
-
-    private void getCurrentCollectionNumber(SQLiteDatabase db)
-    {
-        // Checks the last entry in Collection Table to find the current Collection number
-        Cursor cursor = db.rawQuery("SELECT last_insert_rowid() FROM " + TABLE_02_NAME, null);
-
-        if (cursor.moveToFirst())
-        {
-            collectionNo = cursor.getInt(0);
-        }
-    }
-
-
-
 
     public boolean insertTimingsTable(ArrayList<ArrayList<Double>> timings)
     {
@@ -468,7 +450,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
         catch(Exception ex)
         {
-            System.out.println("Error: " + ex);
+            System.out.println("insertTimingsTable - Error: " + ex);
         }
         finally
         {
@@ -530,7 +512,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
         catch(Exception ex)
         {
-            System.out.println("Error: " + ex);
+            System.out.println("insertCoordsTable - Error: " + ex);
         }
         finally
         {
@@ -549,8 +531,9 @@ public class DatabaseHelper extends SQLiteOpenHelper
     }
 
 
-    public boolean insertPauseTable(ArrayList<Float> liftData)
+    public boolean insertPauseTable(ArrayList<Float> pauseData)
     {
+        // FIX THIS ERROR - I/System.out: insertPauseTable - Error: java.lang.IndexOutOfBoundsException: Index: 15, Size: 15
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -561,6 +544,79 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
         db.beginTransaction();
 
+
+        try
+        {
+            for (int j = 0; j < pauseData.size(); j = j + 5)
+            {
+                Float patternNumber = pauseData.get(j);
+                Float sectorNumber = pauseData.get(j + 1);
+                Float pauseTiming = pauseData.get(j + 2);
+
+                int patternNo = (patternNumber.intValue() + 1);
+                int sectorNo = (sectorNumber.intValue() + 1);
+                double pauseTime = pauseTiming.doubleValue();
+
+                float x = pauseData.get(j + 3);
+                float y = pauseData.get(j + 4);
+
+                sqLiteStatement.clearBindings();
+                sqLiteStatement.bindDouble(2, collectionNo);
+                sqLiteStatement.bindDouble(3, patternNo);
+                sqLiteStatement.bindDouble(4, sectorNo);
+                sqLiteStatement.bindDouble(5, pauseTime);
+                sqLiteStatement.bindDouble(6, x);
+                sqLiteStatement.bindDouble(7, y);
+                sqLiteStatement.execute();
+
+
+
+
+            }
+
+            db.setTransactionSuccessful();
+            wasInsertSuccessful = true;
+
+        }
+        catch(Exception ex)
+        {
+            System.out.println("insertPauseTable - Error: " + ex);
+        }
+        finally
+        {
+            db.endTransaction();
+        }
+
+
+        if (wasInsertSuccessful)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    public boolean insertLiftTable(ArrayList<Float> liftData)
+    {
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+
+        String sql = "INSERT INTO " + TABLE_05_NAME + " (" + TABLE_05_COL_01 + " , " + TABLE_05_COL_02 + " , " + TABLE_05_COL_03 + " , " + TABLE_05_COL_04 + " , " + TABLE_05_COL_05 + " , " + TABLE_05_COL_06 + " , " + TABLE_05_COL_07 + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
+        SQLiteStatement sqLiteStatement = db.compileStatement(sql);
+
+        boolean wasInsertSuccessful = false;
+
+        db.beginTransaction();
 
         try
         {
@@ -598,75 +654,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
         catch(Exception ex)
         {
-            System.out.println("Error: " + ex);
-        }
-        finally
-        {
-            db.endTransaction();
-        }
-
-
-        if (wasInsertSuccessful)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    public boolean insertLiftTable(ArrayList<Float> pauseData)
-    {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-
-        String sql = "INSERT INTO " + TABLE_05_NAME + " (" + TABLE_05_COL_01 + " , " + TABLE_05_COL_02 + " , " + TABLE_05_COL_03 + " , " + TABLE_05_COL_04 + " , " + TABLE_05_COL_05 + " , " + TABLE_05_COL_06 + " , " + TABLE_05_COL_07 + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
-        SQLiteStatement sqLiteStatement = db.compileStatement(sql);
-
-        boolean wasInsertSuccessful = false;
-
-        db.beginTransaction();
-
-        try
-        {
-            for (int j = 0; j < pauseData.size(); j = j + 5)
-            {
-                Float patternNumber = pauseData.get(j);
-                Float sectorNumber = pauseData.get(j + 1);
-                Float pauseTiming = pauseData.get(j + 2);
-
-                int patternNo = (patternNumber.intValue() + 1);
-                int sectorNo = (sectorNumber.intValue() + 1);
-                double pauseTime = pauseTiming.doubleValue();
-
-                float x = pauseData.get(j + 3);
-                float y = pauseData.get(j + 4);
-
-                sqLiteStatement.clearBindings();
-                sqLiteStatement.bindDouble(2, collectionNo);
-                sqLiteStatement.bindDouble(3, patternNo);
-                sqLiteStatement.bindDouble(4, sectorNo);
-                sqLiteStatement.bindDouble(5, pauseTime);
-                sqLiteStatement.bindDouble(6, x);
-                sqLiteStatement.bindDouble(7, y);
-                sqLiteStatement.execute();
-            }
-
-            db.setTransactionSuccessful();
-            wasInsertSuccessful = true;
-
-        }
-        catch(Exception ex)
-        {
-            System.out.println("Error: " + ex);
+            System.out.println("insertLiftTable - Error: " + ex);
         }
         finally
         {
@@ -687,21 +675,20 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /*
-    public Cursor getAllData()
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor res = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-
-        return res;
-    }
-    */
 
     public String getDatabaseName()
     {
         return DATABASE_NAME;
+    }
+
+    private void getCurrentCollectionNumber(SQLiteDatabase db)
+    {
+        // Checks the last entry in Collection Table to find the current Collection number
+        Cursor cursor = db.rawQuery("SELECT last_insert_rowid() FROM " + TABLE_02_NAME, null);
+
+        if (cursor.moveToFirst())
+        {
+            collectionNo = cursor.getInt(0);
+        }
     }
 }

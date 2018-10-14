@@ -14,7 +14,9 @@ public class Today
     private int month;
     private int day;
     private String monthAbbr;
-    private long time;
+    private int hour;
+    private int minute;
+    private int second;
 
 
     public Today()
@@ -26,21 +28,17 @@ public class Today
         day = now.get(Calendar.DATE);
         monthAbbr = months[month - 1];
         sqlDay = new Date(System.currentTimeMillis());
-        time = System.currentTimeMillis();
+        hour = now.get(Calendar.HOUR_OF_DAY);
+        minute = now.get(Calendar.MINUTE);
+        second = now.get(Calendar.SECOND);
 
     }
 
 
     public String getAbbrTodayAndTime()
     {
-        return  "[" + day + ", " + month + ", " + year + " - " + time + "]";
+        return  "[" + day + ", " + month + ", " + year + " - " + hour + ":" + minute + ":" + second + "]";
     }
-
-    public String getToday()
-    {
-        return "[" + year + ", " + month + ", " + day + ", " + monthAbbr + ", " + sqlDay + "]";
-    }
-
 
     public String getAbbrToday()
     {
