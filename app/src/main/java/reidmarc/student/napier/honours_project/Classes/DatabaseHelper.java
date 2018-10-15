@@ -173,103 +173,71 @@ public class DatabaseHelper extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    public boolean insertXYData(ArrayList<ArrayList<Float>> coordsListOfLists)
-    {
 
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        return true; //////////////////
-
-        /*
-        SQLiteDatabase db = this.getWritableDatabase();
-        String sql = "INSERT INTO " + TABLE_01_NAME + " (" + COL_2 + ", " + COL_3 + ", " + COL_4 + ") VALUES (?, ?, ?)";
-        SQLiteStatement sqLiteStatement = db.compileStatement(sql);
-
-        boolean wasInsertSuccessful = false;
-
-        db.beginTransaction();
-
-        try
-        {
-            for (int i = 0; i < coordsListOfLists.size(); i++)
-            {
-                for (int j = 0; j < coordsListOfLists.get(i).size(); j = j + 2)
-                {
-                    int pattern = i;
-                    float x = coordsListOfLists.get(i).get(j);
-                    float y = coordsListOfLists.get(i).get(j + 1);
-
-                    sqLiteStatement.clearBindings();
-                    sqLiteStatement.bindDouble(1, pattern);
-                    sqLiteStatement.bindDouble(2, x);
-                    sqLiteStatement.bindDouble(3, y);
-                    sqLiteStatement.execute();
-                }
-            }
-            db.setTransactionSuccessful();
-            wasInsertSuccessful = true;
-
-        }
-        catch(Exception ex)
-        {
-            System.out.println("Error: " + ex);
-        }
-        finally
-        {
-            db.endTransaction();
-        }
-
-
-        if (wasInsertSuccessful)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
-        */
-    }
 
     public boolean insertUserTable(String userID)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String sql = "INSERT INTO " + TABLE_01_NAME + " (" + TABLE_01_COL_02 + ") VALUES (?)";
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        SQLiteStatement sqLiteStatement = db.compileStatement(sql);
+        int userIdCount = 0;
 
-        boolean wasInsertSuccessful = false;
+        // Checks the to see if the userId already exists in the DB
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_01_NAME + " WHERE " + TABLE_01_COL_02 + " LIKE '" + userID + "'", null);
 
-        db.beginTransaction();
-
-        try
+        if (cursor.moveToFirst())
         {
-            sqLiteStatement.clearBindings();
-            sqLiteStatement.bindString(1, userID);
-            sqLiteStatement.execute();
-
-            db.setTransactionSuccessful();
-            wasInsertSuccessful = true;
-
-        }
-        catch(Exception ex)
-        {
-            System.out.println("insertUserTable - Error: " + ex);
-        }
-        finally
-        {
-            db.endTransaction();
+            userIdCount = cursor.getCount();
         }
 
-        if (wasInsertSuccessful)
+
+        System.out.println("THE USER COUNT IS -------------" + userIdCount);
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        if (userIdCount == 0)
         {
-            return true;
+            String sql = "INSERT INTO " + TABLE_01_NAME + " (" + TABLE_01_COL_02 + ") VALUES (?)";
+
+            SQLiteStatement sqLiteStatement = db.compileStatement(sql);
+
+            boolean wasInsertSuccessful = false;
+
+            db.beginTransaction();
+
+            try
+            {
+                sqLiteStatement.clearBindings();
+                sqLiteStatement.bindString(1, userID);
+                sqLiteStatement.execute();
+
+                db.setTransactionSuccessful();
+                wasInsertSuccessful = true;
+
+            }
+            catch (Exception ex)
+            {
+                System.out.println("insertUserTable - Error: " + ex);
+            }
+            finally
+            {
+                db.endTransaction();
+            }
+
+            if (wasInsertSuccessful)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
-            return false;
+            return true;
         }
     }
 
@@ -292,6 +260,8 @@ public class DatabaseHelper extends SQLiteOpenHelper
                 int xCounter = -1;
                 int yCounter = 0;
 
+                /*
+
                 if (patterns.get(k).length == 9)
                 {
                     sql = "INSERT INTO " + TABLE_03_NAME + " ( " + TABLE_03_COL_02 + " , " + TABLE_03_COL_03 + " , " + TABLE_03_COL_04 + " , " + TABLE_03_COL_05 + " , " + TABLE_03_COL_06 + " , " + TABLE_03_COL_07 + " , " + TABLE_03_COL_08 + " , " + TABLE_03_COL_09 + " , " + TABLE_03_COL_10 + " , " + TABLE_03_COL_11 + " , " + TABLE_03_COL_12 + " , " + TABLE_03_COL_13 + " , " + TABLE_03_COL_14 + " , " + TABLE_03_COL_15 + " , " + TABLE_03_COL_16 + " , " + TABLE_03_COL_17 + " , " + TABLE_03_COL_18 + " , " + TABLE_03_COL_19 + ")  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -309,6 +279,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
                 {
                     sql = "INSERT INTO " + TABLE_03_NAME + " ( " + TABLE_03_COL_02 + " ) VALUES (123456789)";
                 }
+
+                */
+
+
+                sql = "INSERT INTO " + TABLE_03_NAME + " ( " + TABLE_03_COL_02 + " , " + TABLE_03_COL_03 + " , " + TABLE_03_COL_04 + " , " + TABLE_03_COL_05 + " , " + TABLE_03_COL_06 + " , " + TABLE_03_COL_07 + " , " + TABLE_03_COL_08 + " , " + TABLE_03_COL_09 + " , " + TABLE_03_COL_10 + " , " + TABLE_03_COL_11 + " , " + TABLE_03_COL_12 + " , " + TABLE_03_COL_13 + " , " + TABLE_03_COL_14 + " , " + TABLE_03_COL_15 + " , " + TABLE_03_COL_16 + " , " + TABLE_03_COL_17 + " , " + TABLE_03_COL_18 + " , " + TABLE_03_COL_19 + " , " + TABLE_03_COL_20 + " , " + TABLE_03_COL_21 + " , " + TABLE_03_COL_22 + " , " + TABLE_03_COL_23 + " , " + TABLE_03_COL_24 + " ," + TABLE_03_COL_25 + " ," + TABLE_03_COL_26 + " ," + TABLE_03_COL_27 + " , " + TABLE_03_COL_28 + " , " + TABLE_03_COL_29 + " , " + TABLE_03_COL_30 + " , " + TABLE_03_COL_31 + " , " + TABLE_03_COL_32 + " , " + TABLE_03_COL_33 + " , " + TABLE_03_COL_34 + " , " + TABLE_03_COL_35 + " , " + TABLE_03_COL_36 + " , " + TABLE_03_COL_37 + " , " + TABLE_03_COL_38 + " , " + TABLE_03_COL_39 + " , " + TABLE_03_COL_40 + " , " + TABLE_03_COL_41 + " , " + TABLE_03_COL_42 + " , " + TABLE_03_COL_43 + " )  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
 
                 SQLiteStatement sqLiteStatement = db.compileStatement(sql);
 
