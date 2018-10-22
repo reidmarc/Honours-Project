@@ -5,15 +5,11 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import reidmarc.student.napier.honours_project.*;
 import reidmarc.student.napier.honours_project.Classes.*;
-
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,7 +25,7 @@ public class MainActivity extends AppCompatActivity
     private CanvasView canvasView;
     private Timing dbInsertTiming;
     private Today today;
-
+    private int backButtonCounter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -69,14 +65,18 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    // Method taken from https://developer.android.com/training/system-ui/immersive#java
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
+    public void onWindowFocusChanged(boolean hasFocus)
+    {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
+        if (hasFocus)
+        {
             hideSystemUI();
         }
     }
 
+    // Method taken from https://developer.android.com/training/system-ui/immersive#java
     private void hideSystemUI()
     {
         // Enables regular immersive mode.
@@ -95,11 +95,6 @@ public class MainActivity extends AppCompatActivity
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
-
-
-
-
-
         private void setupBackButton()
     {
         backButton.setOnClickListener(new View.OnClickListener()
@@ -107,7 +102,16 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
+                // The back button must be pressed twice
+                if (backButtonCounter > 0 )
+                {
+                    backButtonCounter = 0;
+                    startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
+                }
+                else
+                {
+                    backButtonCounter = backButtonCounter + 1;
+                }
             }
         });
     }
@@ -200,7 +204,7 @@ public class MainActivity extends AppCompatActivity
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    // Adds coordinates to Database
+    // Adds data to the Database
     public void addData()
     {
         addButton.setOnClickListener(new View.OnClickListener()
@@ -208,46 +212,35 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                dbInsertTiming.startTiming();                                                               // <----------  TESTING
-
-
-
-
-
-
-
-
-
-                boolean insertUserCompleted = myDb.insertUserTable(incomingName);
-
-                boolean insertPatternsCompleted = myDb.insertPatternTable(canvasView.getPatternsList());
-
-                boolean insertCollectionCompleted = myDb.insertCollectionTable(today.getAbbrTodayAndTime(), incomingName);
-
-                boolean insertTimingsCompleted = myDb.insertTimingsTable(canvasView.getSectorTimingListOfLists());
-
-                boolean insertCoordsCompleted = myDb.insertCoordsTable(canvasView.getCoordsListOfLists());
-
-                boolean insertPauseCompleted = myDb.insertPauseTable(canvasView.getPauseTimingList());
-
-                boolean insertLiftCompleted = myDb.insertLiftTable(canvasView.getLiftTimingList());
-
-
-
-
-
-
-                System.out.println("TIME TAKEN TO INSERT DATA: " + dbInsertTiming.timeDurationSeconds());   // <----------  TESTING
-
-                if (insertUserCompleted && insertPatternsCompleted && insertCollectionCompleted && insertTimingsCompleted && insertCoordsCompleted && insertPauseCompleted && insertLiftCompleted)
+                if (canvasView.isTheLastTargetOfTheLastPattern())
                 {
-                    Toast.makeText(MainActivity.this, "DATA INSERTED", Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    Toast.makeText(MainActivity.this, "DATA NOT INSERTED", Toast.LENGTH_LONG).show();
-                }
+                    dbInsertTiming.startTiming();                                                                           // <----------  TESTING
 
+                    boolean insertUserCompleted = myDb.insertUserTable(incomingName);
+
+                    boolean insertPatternsCompleted = myDb.insertPatternTable(canvasView.getPatternsList());
+
+                    boolean insertCollectionCompleted = myDb.insertCollectionTable(today.getAbbrTodayAndTime(), incomingName);
+
+                    boolean insertTimingsCompleted = myDb.insertTimingsTable(canvasView.getSectorTimingListOfLists());
+
+                    boolean insertCoordsCompleted = myDb.insertCoordsTable(canvasView.getCoordsListOfLists());
+
+                    boolean insertPauseCompleted = myDb.insertPauseTable(canvasView.getPauseTimingList());
+
+                    boolean insertLiftCompleted = myDb.insertLiftTable(canvasView.getLiftTimingList());
+
+                    System.out.println("TIME TAKEN TO INSERT DATA: " + dbInsertTiming.timeDurationSeconds());               // <----------  TESTING
+
+                    if (insertUserCompleted && insertPatternsCompleted && insertCollectionCompleted && insertTimingsCompleted && insertCoordsCompleted && insertPauseCompleted && insertLiftCompleted)
+                    {
+                        Toast.makeText(MainActivity.this, "DATA INSERTED", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(MainActivity.this, "DATA NOT INSERTED", Toast.LENGTH_LONG).show();
+                    }
+                }
             }
         });
     }

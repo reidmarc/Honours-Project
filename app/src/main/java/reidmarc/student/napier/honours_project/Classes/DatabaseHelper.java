@@ -255,10 +255,25 @@ public class DatabaseHelper extends SQLiteOpenHelper
         {
             db.beginTransaction();
 
-            for (int k = 0; k < patterns.size(); k++)
+            int patternCount = 0;
+
+            // Checks the to see if the userId already exists in the DB
+            Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_03_NAME + "", null);
+
+            if (cursor.moveToFirst())
             {
-                int xCounter = -1;
-                int yCounter = 0;
+                patternCount = cursor.getCount();
+            }
+
+
+
+            if (patternCount == 0)
+            {
+
+                for (int k = 0; k < patterns.size(); k++)
+                {
+                    int xCounter = -1;
+                    int yCounter = 0;
 
                 /*
 
@@ -283,23 +298,23 @@ public class DatabaseHelper extends SQLiteOpenHelper
                 */
 
 
-                sql = "INSERT INTO " + TABLE_03_NAME + " ( " + TABLE_03_COL_02 + " , " + TABLE_03_COL_03 + " , " + TABLE_03_COL_04 + " , " + TABLE_03_COL_05 + " , " + TABLE_03_COL_06 + " , " + TABLE_03_COL_07 + " , " + TABLE_03_COL_08 + " , " + TABLE_03_COL_09 + " , " + TABLE_03_COL_10 + " , " + TABLE_03_COL_11 + " , " + TABLE_03_COL_12 + " , " + TABLE_03_COL_13 + " , " + TABLE_03_COL_14 + " , " + TABLE_03_COL_15 + " , " + TABLE_03_COL_16 + " , " + TABLE_03_COL_17 + " , " + TABLE_03_COL_18 + " , " + TABLE_03_COL_19 + " , " + TABLE_03_COL_20 + " , " + TABLE_03_COL_21 + " , " + TABLE_03_COL_22 + " , " + TABLE_03_COL_23 + " , " + TABLE_03_COL_24 + " ," + TABLE_03_COL_25 + " ," + TABLE_03_COL_26 + " ," + TABLE_03_COL_27 + " , " + TABLE_03_COL_28 + " , " + TABLE_03_COL_29 + " , " + TABLE_03_COL_30 + " , " + TABLE_03_COL_31 + " , " + TABLE_03_COL_32 + " , " + TABLE_03_COL_33 + " , " + TABLE_03_COL_34 + " , " + TABLE_03_COL_35 + " , " + TABLE_03_COL_36 + " , " + TABLE_03_COL_37 + " , " + TABLE_03_COL_38 + " , " + TABLE_03_COL_39 + " , " + TABLE_03_COL_40 + " , " + TABLE_03_COL_41 + " , " + TABLE_03_COL_42 + " , " + TABLE_03_COL_43 + " )  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    sql = "INSERT INTO " + TABLE_03_NAME + " ( " + TABLE_03_COL_02 + " , " + TABLE_03_COL_03 + " , " + TABLE_03_COL_04 + " , " + TABLE_03_COL_05 + " , " + TABLE_03_COL_06 + " , " + TABLE_03_COL_07 + " , " + TABLE_03_COL_08 + " , " + TABLE_03_COL_09 + " , " + TABLE_03_COL_10 + " , " + TABLE_03_COL_11 + " , " + TABLE_03_COL_12 + " , " + TABLE_03_COL_13 + " , " + TABLE_03_COL_14 + " , " + TABLE_03_COL_15 + " , " + TABLE_03_COL_16 + " , " + TABLE_03_COL_17 + " , " + TABLE_03_COL_18 + " , " + TABLE_03_COL_19 + " , " + TABLE_03_COL_20 + " , " + TABLE_03_COL_21 + " , " + TABLE_03_COL_22 + " , " + TABLE_03_COL_23 + " , " + TABLE_03_COL_24 + " ," + TABLE_03_COL_25 + " ," + TABLE_03_COL_26 + " ," + TABLE_03_COL_27 + " , " + TABLE_03_COL_28 + " , " + TABLE_03_COL_29 + " , " + TABLE_03_COL_30 + " , " + TABLE_03_COL_31 + " , " + TABLE_03_COL_32 + " , " + TABLE_03_COL_33 + " , " + TABLE_03_COL_34 + " , " + TABLE_03_COL_35 + " , " + TABLE_03_COL_36 + " , " + TABLE_03_COL_37 + " , " + TABLE_03_COL_38 + " , " + TABLE_03_COL_39 + " , " + TABLE_03_COL_40 + " , " + TABLE_03_COL_41 + " , " + TABLE_03_COL_42 + " , " + TABLE_03_COL_43 + " )  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 
-                SQLiteStatement sqLiteStatement = db.compileStatement(sql);
+                    SQLiteStatement sqLiteStatement = db.compileStatement(sql);
 
-                sqLiteStatement.clearBindings();
+                    sqLiteStatement.clearBindings();
 
-                for (int j = 0; j < patterns.get(k).length ; j++)
-                {
-                    int x = patterns.get(k)[j][0];
-                    int y = patterns.get(k)[j][1];
+                    for (int j = 0; j < patterns.get(k).length; j++) {
+                        int x = patterns.get(k)[j][0];
+                        int y = patterns.get(k)[j][1];
 
-                    sqLiteStatement.bindLong((xCounter = xCounter + 2), x);
-                    sqLiteStatement.bindLong((yCounter = yCounter + 2), y);
+                        sqLiteStatement.bindLong((xCounter = xCounter + 2), x);
+                        sqLiteStatement.bindLong((yCounter = yCounter + 2), y);
+                    }
+
+                    sqLiteStatement.execute();
                 }
-
-                sqLiteStatement.execute();
             }
 
             db.setTransactionSuccessful();
