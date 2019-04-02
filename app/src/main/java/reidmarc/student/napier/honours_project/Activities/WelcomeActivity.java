@@ -17,6 +17,7 @@ public class WelcomeActivity extends AppCompatActivity
 {
     private EditText name;
     private String userName;
+    boolean numeric;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,6 +34,7 @@ public class WelcomeActivity extends AppCompatActivity
     {
         Button nextButton = findViewById(R.id.nextButton);
 
+
         nextButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -41,8 +43,20 @@ public class WelcomeActivity extends AppCompatActivity
                 name = findViewById(R.id.nameInputTextbox);
                 userName = name.getText().toString();
 
+
+                // Ensures only integers can be used as the ID
+                try
+                {
+                    Integer number = Integer.parseInt(userName);
+                    numeric = true;
+                }
+                catch(NumberFormatException e)
+                {
+                    numeric = false;
+                }
+
                 // IF statement ensures a name is entered before navigating to the next page.
-                if (!userName.trim().isEmpty())
+                if (!userName.trim().isEmpty() && numeric)
                 {
                     Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                     intent.putExtra("name", userName);
@@ -52,7 +66,7 @@ public class WelcomeActivity extends AppCompatActivity
                 }
                 else
                 {
-                    Toast.makeText(WelcomeActivity.this, "You must enter a name to continue....", Toast.LENGTH_LONG).show();
+                    Toast.makeText(WelcomeActivity.this, "You must enter an ID number to continue....", Toast.LENGTH_LONG).show();
                 }
             }
         });

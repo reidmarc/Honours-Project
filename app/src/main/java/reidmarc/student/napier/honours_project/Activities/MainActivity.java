@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-
+    // Sets the date
     private void setTheDate()
     {
 
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
+    // Exports the database
     private void exportDatabase()
     {
         exportButton.setOnClickListener(new View.OnClickListener()
@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    // Copies the database file
     private void copyDatabaseFile()
     {
         if (isExternalStorageMounted())
@@ -197,6 +198,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    // Check if external storage is mounted
     private boolean isExternalStorageMounted()
     {
         String state = Environment.getExternalStorageState();
@@ -240,6 +242,10 @@ public class MainActivity extends AppCompatActivity
                     {
                         Toast.makeText(MainActivity.this, "DATA NOT INSERTED", Toast.LENGTH_LONG).show();
                     }
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, "You must complete all available patterns to add user data to the database", Toast.LENGTH_LONG).show();
                 }
             }
         });

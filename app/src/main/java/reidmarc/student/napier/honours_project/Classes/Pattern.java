@@ -1,7 +1,5 @@
 package reidmarc.student.napier.honours_project.Classes;
 
-import java.util.ArrayList;
-
 public class Pattern
 {
     private int patternNum;

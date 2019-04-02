@@ -111,32 +111,18 @@ public class DatabaseHelper extends SQLiteOpenHelper
     private static final String TABLE_07_COL_05 = "DrawnPathX";
     private static final String TABLE_07_COL_06 = "DrawnPathY";
 
-
-
     private int collectionNo = 0;
 
-
-
-
-
-
-
-
-
-
-
+    // Constructor
     public DatabaseHelper(Context context)
     {
         super(context, DATABASE_NAME, null, 1);
     }
 
+    // Creates the database
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////// TESTING DB WITHOUT NOT NULL CONSTRAINT ////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         // User Table Setup
         db.execSQL( "CREATE TABLE " + TABLE_01_NAME + " ( " + TABLE_01_COL_01 + " INTEGER PRIMARY KEY AUTOINCREMENT," + TABLE_01_COL_02 + " TEXT UNIQUE )" );
 
@@ -162,7 +148,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1)
     {
-
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_07_NAME + "");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_06_NAME + "");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_05_NAME + "");
@@ -173,13 +158,10 @@ public class DatabaseHelper extends SQLiteOpenHelper
         onCreate(db);
     }
 
-
-
+    // Inserts data into the User Table
     public boolean insertUserTable(String userID)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         int userIdCount = 0;
 
@@ -191,11 +173,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
             userIdCount = cursor.getCount();
         }
 
-
         System.out.println("THE USER COUNT IS -------------" + userIdCount);
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         if (userIdCount == 0)
         {
@@ -241,13 +219,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
     }
 
-
-
+    // Inserts data into the Pattern Table
     public boolean insertPatternTable(ArrayList<int[][]> patterns)
     {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String sql; // = "";
+        String sql;
 
         boolean wasInsertSuccessful = false;
 
@@ -275,31 +252,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
                     int xCounter = -1;
                     int yCounter = 0;
 
-                /*
-
-                if (patterns.get(k).length == 9)
-                {
-                    sql = "INSERT INTO " + TABLE_03_NAME + " ( " + TABLE_03_COL_02 + " , " + TABLE_03_COL_03 + " , " + TABLE_03_COL_04 + " , " + TABLE_03_COL_05 + " , " + TABLE_03_COL_06 + " , " + TABLE_03_COL_07 + " , " + TABLE_03_COL_08 + " , " + TABLE_03_COL_09 + " , " + TABLE_03_COL_10 + " , " + TABLE_03_COL_11 + " , " + TABLE_03_COL_12 + " , " + TABLE_03_COL_13 + " , " + TABLE_03_COL_14 + " , " + TABLE_03_COL_15 + " , " + TABLE_03_COL_16 + " , " + TABLE_03_COL_17 + " , " + TABLE_03_COL_18 + " , " + TABLE_03_COL_19 + ")  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                }
-                else if (patterns.get(k).length == 15)
-                {
-                    sql = "INSERT INTO " + TABLE_03_NAME + " ( " + TABLE_03_COL_02 + " , " + TABLE_03_COL_03 + " , " + TABLE_03_COL_04 + " , " + TABLE_03_COL_05 + " , " + TABLE_03_COL_06 + " , " + TABLE_03_COL_07 + " , " + TABLE_03_COL_08 + " , " + TABLE_03_COL_09 + " , " + TABLE_03_COL_10 + " , " + TABLE_03_COL_11 + " , " + TABLE_03_COL_12 + " , " + TABLE_03_COL_13 + " , " + TABLE_03_COL_14 + " , " + TABLE_03_COL_15 + " , " + TABLE_03_COL_16 + " , " + TABLE_03_COL_17 + " , " + TABLE_03_COL_18 + " , " + TABLE_03_COL_19 + " , " + TABLE_03_COL_20 + " , " + TABLE_03_COL_21 + " , " + TABLE_03_COL_22 + " , " + TABLE_03_COL_23 + " , " + TABLE_03_COL_24 + " ," + TABLE_03_COL_25 + " ," + TABLE_03_COL_26 + " ," + TABLE_03_COL_27 + " , " + TABLE_03_COL_28 + " , " + TABLE_03_COL_29 + " , " + TABLE_03_COL_30 + " , " + TABLE_03_COL_31 + " )  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                }
-                else if (patterns.get(k).length == 21)
-                {
                     sql = "INSERT INTO " + TABLE_03_NAME + " ( " + TABLE_03_COL_02 + " , " + TABLE_03_COL_03 + " , " + TABLE_03_COL_04 + " , " + TABLE_03_COL_05 + " , " + TABLE_03_COL_06 + " , " + TABLE_03_COL_07 + " , " + TABLE_03_COL_08 + " , " + TABLE_03_COL_09 + " , " + TABLE_03_COL_10 + " , " + TABLE_03_COL_11 + " , " + TABLE_03_COL_12 + " , " + TABLE_03_COL_13 + " , " + TABLE_03_COL_14 + " , " + TABLE_03_COL_15 + " , " + TABLE_03_COL_16 + " , " + TABLE_03_COL_17 + " , " + TABLE_03_COL_18 + " , " + TABLE_03_COL_19 + " , " + TABLE_03_COL_20 + " , " + TABLE_03_COL_21 + " , " + TABLE_03_COL_22 + " , " + TABLE_03_COL_23 + " , " + TABLE_03_COL_24 + " ," + TABLE_03_COL_25 + " ," + TABLE_03_COL_26 + " ," + TABLE_03_COL_27 + " , " + TABLE_03_COL_28 + " , " + TABLE_03_COL_29 + " , " + TABLE_03_COL_30 + " , " + TABLE_03_COL_31 + " , " + TABLE_03_COL_32 + " , " + TABLE_03_COL_33 + " , " + TABLE_03_COL_34 + " , " + TABLE_03_COL_35 + " , " + TABLE_03_COL_36 + " , " + TABLE_03_COL_37 + " , " + TABLE_03_COL_38 + " , " + TABLE_03_COL_39 + " , " + TABLE_03_COL_40 + " , " + TABLE_03_COL_41 + " , " + TABLE_03_COL_42 + " , " + TABLE_03_COL_43 + " )  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-                }
-                else
-                {
-                    sql = "INSERT INTO " + TABLE_03_NAME + " ( " + TABLE_03_COL_02 + " ) VALUES (123456789)";
-                }
-
-                */
-
-
-                    sql = "INSERT INTO " + TABLE_03_NAME + " ( " + TABLE_03_COL_02 + " , " + TABLE_03_COL_03 + " , " + TABLE_03_COL_04 + " , " + TABLE_03_COL_05 + " , " + TABLE_03_COL_06 + " , " + TABLE_03_COL_07 + " , " + TABLE_03_COL_08 + " , " + TABLE_03_COL_09 + " , " + TABLE_03_COL_10 + " , " + TABLE_03_COL_11 + " , " + TABLE_03_COL_12 + " , " + TABLE_03_COL_13 + " , " + TABLE_03_COL_14 + " , " + TABLE_03_COL_15 + " , " + TABLE_03_COL_16 + " , " + TABLE_03_COL_17 + " , " + TABLE_03_COL_18 + " , " + TABLE_03_COL_19 + " , " + TABLE_03_COL_20 + " , " + TABLE_03_COL_21 + " , " + TABLE_03_COL_22 + " , " + TABLE_03_COL_23 + " , " + TABLE_03_COL_24 + " ," + TABLE_03_COL_25 + " ," + TABLE_03_COL_26 + " ," + TABLE_03_COL_27 + " , " + TABLE_03_COL_28 + " , " + TABLE_03_COL_29 + " , " + TABLE_03_COL_30 + " , " + TABLE_03_COL_31 + " , " + TABLE_03_COL_32 + " , " + TABLE_03_COL_33 + " , " + TABLE_03_COL_34 + " , " + TABLE_03_COL_35 + " , " + TABLE_03_COL_36 + " , " + TABLE_03_COL_37 + " , " + TABLE_03_COL_38 + " , " + TABLE_03_COL_39 + " , " + TABLE_03_COL_40 + " , " + TABLE_03_COL_41 + " , " + TABLE_03_COL_42 + " , " + TABLE_03_COL_43 + " )  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
 
                     SQLiteStatement sqLiteStatement = db.compileStatement(sql);
 
@@ -340,11 +293,9 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
     }
 
-
+    // Inserts the User ID and Time and Date into the Collection Table
     public boolean insertCollectionTable(String dateAndTime, String user)
     {
-
-
         SQLiteDatabase db = this.getWritableDatabase();
 
         String sql = "INSERT INTO " + TABLE_02_NAME + " (" + TABLE_02_COL_02 + ", " + TABLE_02_COL_03 + ") VALUES (?, ?)";
@@ -386,6 +337,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
     }
 
+    // Inserts the times for each sector into the Timing Table
     public boolean insertTimingsTable(ArrayList<ArrayList<Double>> timings)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -413,18 +365,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
 
                     int patternNo = (patternNumber.intValue() + 1);
                     int sectorNo = (sectorNumber.intValue() + 1);
-
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////
-                    ////////////////////////////////////////////// TESTING /////////////////////////////////////////////
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////
-                    /*
-                    System.out.println("Collection #: " + collectionNo);
-                    System.out.println("Pattern #: " + patternNo);
-                    System.out.println("Sector #: " + sectorNo);
-                    System.out.println("Sector Time: " + sectorTiming);
-                    */
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
                     sqLiteStatement.clearBindings();
                     sqLiteStatement.bindDouble(2, collectionNo);
@@ -459,6 +399,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
     }
 
+    // Inserts the Co-ordinates recorded into the Coords Table
     public boolean insertCoordsTable(ArrayList<ArrayList<Float>> coordsListOfLists)
     {
 
@@ -521,11 +462,9 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
     }
 
-
+    // If the user performed a pause then it is inserted into the Pause Table
     public boolean insertPauseTable(ArrayList<Float> pauseData)
     {
-        // FIX THIS ERROR - I/System.out: insertPauseTable - Error: java.lang.IndexOutOfBoundsException: Index: 15, Size: 15
-
         SQLiteDatabase db = this.getWritableDatabase();
 
         String sql = "INSERT INTO " + TABLE_05_NAME + " (" + TABLE_05_COL_01 + " , " + TABLE_05_COL_02 + " , " + TABLE_05_COL_03 + " , " + TABLE_05_COL_04 + " , " + TABLE_05_COL_05 + " , " + TABLE_05_COL_06 + " , " + TABLE_05_COL_07 + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -559,10 +498,6 @@ public class DatabaseHelper extends SQLiteOpenHelper
                 sqLiteStatement.bindDouble(6, x);
                 sqLiteStatement.bindDouble(7, y);
                 sqLiteStatement.execute();
-
-
-
-
             }
 
             db.setTransactionSuccessful();
@@ -587,20 +522,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
         {
             return false;
         }
-
-
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+    // If the user performed a lift then it is inserted into the Lift Table
     public boolean insertLiftTable(ArrayList<Float> liftData)
     {
-
-
         SQLiteDatabase db = this.getWritableDatabase();
-
 
         String sql = "INSERT INTO " + TABLE_06_NAME + " (" + TABLE_06_COL_01 + " , " + TABLE_06_COL_02 + " , " + TABLE_06_COL_03 + " , " + TABLE_06_COL_04 + " , " + TABLE_06_COL_05 + " , " + TABLE_06_COL_06 + " , " + TABLE_06_COL_07 + " , " + TABLE_06_COL_08 + " , " + TABLE_06_COL_09 + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SQLiteStatement sqLiteStatement = db.compileStatement(sql);
@@ -663,15 +590,13 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    // A getter for the database name
     public String getDatabaseName()
     {
         return DATABASE_NAME;
     }
 
+    // Gets the number of the last collection before inserting the new collection
     private void getCurrentCollectionNumber(SQLiteDatabase db)
     {
         // Checks the last entry in Collection Table to find the current Collection number

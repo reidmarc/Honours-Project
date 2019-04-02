@@ -57,24 +57,18 @@ public class CanvasView extends View
     // Arraylists to store pause data
     private ArrayList<Float> pauseList = new ArrayList<>();
 
-
     // Arraylists to store pause data
     private ArrayList<Float> liftList = new ArrayList<>();
-
 
     private boolean hasStarted = false;
     private boolean hasFinished = false;
 
-
     // Related to storing and retrieving patterns
     private ArrayList<int[][]> patternList = new ArrayList<>();
-
-
 
     // Counters
     private int targetCounter = 0;
     private int patternCounter = 0;
-
 
     // Related to timing
     private ArrayList<Double> sectorTimingList = new ArrayList<>();
@@ -92,9 +86,7 @@ public class CanvasView extends View
     private float previousY;
 
 
-
-
-
+    // Constructor
     public CanvasView(Context context, @Nullable AttributeSet attrs)
     {
         super(context, attrs);
@@ -103,7 +95,6 @@ public class CanvasView extends View
         getPatterns();
 
         mPath = new Path();
-
 
         userLine = new Paint();
         userLine.setAntiAlias(true);
@@ -131,7 +122,7 @@ public class CanvasView extends View
         liftTiming = new Timing();
     }
 
-
+    // Passes coordinates to the pattern class and then retrieves an array of the coordinates
     private void getPatterns()
     {
         // --------------------- PRACTICE PATTERNS ---------------------
@@ -147,10 +138,6 @@ public class CanvasView extends View
         patternList.add(patternOne);
         patternList.add(patternTwo);
 
-
-
-
-
         // --------------------- 9 DOT PATTERNS ---------------------
         int[][] patternThree;
         int[][] patternFour;
@@ -163,8 +150,6 @@ public class CanvasView extends View
 
         patternList.add(patternThree);
         patternList.add(patternFour);
-
-
 
         // --------------------- 15 DOT PATTERNS ---------------------
         int[][] patternFive;
@@ -179,8 +164,6 @@ public class CanvasView extends View
         patternList.add(patternFive);
         patternList.add(patternSix);
 
-
-
         // --------------------- 21 DOT PATTERNS ---------------------
         int[][] patternSeven;
         int[][] patternEight;
@@ -193,11 +176,6 @@ public class CanvasView extends View
 
         patternList.add(patternSeven);
         patternList.add(patternEight);
-
-
-
-
-
     }
 
 
@@ -225,7 +203,7 @@ public class CanvasView extends View
         drawTargetCircles(canvas);
     }
 
-
+    // Draws the dots
     private void drawTargetCircles(Canvas canvas)
     {
         if (!isTheLastTargetOfTheLastPattern)
@@ -241,7 +219,7 @@ public class CanvasView extends View
         }
     }
 
-
+    // Checks if the user has hit the dot
     private void targetCheck(float x, float y)
     {
         float tx = Math.abs(x - patternList.get(patternCounter)[targetCounter][0]);
@@ -262,14 +240,6 @@ public class CanvasView extends View
                 sectorTimingList.add(targetNum);
                 sectorTimingList.add(targetTiming.timeDurationSeconds());
 
-                /*
-                System.out.println("Pattern Counter is: " + patternCounter);
-                System.out.println("Target Counter is: " + targetCounter);
-                System.out.println("Sector Time: " + targetTiming.timeDurationSeconds());
-                */
-
-
-
                 if (targetCounter < patternList.get(patternCounter).length - 1)
                 {
                     targetTiming.startTiming();
@@ -283,8 +253,6 @@ public class CanvasView extends View
                 }
                 else
                 {
-                    //patternTiming.addTimeToList(patternTiming.timeDurationSeconds());
-
                     patternCounter = patternCounter + 1;
 
                     String toastText = "You have completed pattern # " + patternCounter + " of " + patternList.size() + ".";
@@ -311,7 +279,6 @@ public class CanvasView extends View
                 mY = y;
                 hasStarted = true;
 
-                //patternTiming.startTiming();
                 targetTiming.startTiming();
             }
             else
@@ -329,10 +296,6 @@ public class CanvasView extends View
 
         if (hasLifted)
         {
-            //System.out.println("LIFT for - " + liftTiming.timeDurationSeconds() + " on pattern " + patternCounter + " between dots " + targetCounter + " and " + (targetCounter + 1) +"");
-            // Add this data to an arraylist needs xy coords
-
-
             // Add sector time to list for that pattern
             float patternNum = (float) patternCounter;
             float targetNum = (float) targetCounter;
@@ -359,7 +322,6 @@ public class CanvasView extends View
     {
         targetCheck(x, y);
 
-
         if (hasStarted)
         {
             float dx = Math.abs(x - mX);
@@ -377,26 +339,19 @@ public class CanvasView extends View
         }
     }
 
-
+    // Checks if the user has paused
     private void pauseCheck(float x, float y)
     {
         float xDiff = Math.abs(x - previousX);
         float yDiff = Math.abs(y - previousY);
 
-        //System.out.println(x + " - " + y);
-
         if (hasPauseTimerStarted)
         {
             if (xDiff > 0.25 || yDiff > 0.25)
             {
-                // These values need fine tuned
-                // if (pauseTiming.timeDurationSeconds() > 0.5 && (xDiff > 0.25 || yDiff > 0.25))
+
                 if (pauseTiming.timeDurationSeconds() > 0.50)
                 {
-                    //System.out.println("----------------------------------PAUSED for " + pauseTiming.timeDurationSeconds() + " on pattern " + patternCounter + " between dots " + targetCounter + " and " + (targetCounter + 1) + "");
-                    // add this data to an array list needs xy coords
-
-
                     // Add sector time to list for that pattern
                     float patternNum = (float) patternCounter;
                     float targetNum = (float) targetCounter;
@@ -426,12 +381,6 @@ public class CanvasView extends View
     // Clears the canvas
     private void clearCanvas()
     {
-        // Outputs test info to console
-        //writeToConsole();
-
-        // Compares times
-        //compareTimings(targetTiming.printTimingList(patternCounter), patternTiming.printTimingList(patternCounter));
-
         // Add list of x and y coordinates to the coordinates list
         coordsList.add(new ArrayList<>(xyList));
 
@@ -443,10 +392,6 @@ public class CanvasView extends View
         sectorTimingListOfLists.add(new ArrayList<>(sectorTimingList));
 
         sectorTimingList.clear();
-
-
-
-
 
         // resets pause timer for new pattern
         hasPauseTimerStarted = false;
@@ -557,54 +502,17 @@ public class CanvasView extends View
         return isTheLastTargetOfTheLastPattern;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    //////////////////////////////////TESTING//////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
+    // Stores the co-ordinates of the drawn path
     private void storeCoordinates(float x, float y)
     {
-
         float patternNum = (float) patternCounter;
         float targetNum = (float) targetCounter;
-
 
         xyList.add(patternNum);
         xyList.add(targetNum);
 
-
         xyList.add(x);
         xyList.add(y);
     }
-
-    /*
-    private void writeToConsole()
-    {
-
-        for (int i = 0; i < xyList.size(); i = i + 2 )
-        {
-            System.out.println("Co-ordinate: " + ( i + 1 ) + "");
-            System.out.println("X co-ordinate: " + xyList.get(i) + " for pattern " + patternCounter);
-            System.out.println("Y co-ordinate: " + xyList.get(i + 1) + " for pattern " + patternCounter);
-        }
-
-    }
-
-    private void compareTimings(double totalTargetTime, double totalPattenTime)
-    {
-        double difference = totalTargetTime - totalPattenTime;
-
-        if (difference < 0.01 && difference > -0.01)
-        {
-            System.out.println("The timings have passed, with a difference of: " + difference + " seconds.");
-        }
-        else
-        {
-            System.out.println("The timings have failed, with a difference of: " + difference + " seconds.");
-        }
-    }
-    */
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////
 }
 
